@@ -19,12 +19,15 @@ extension Buffer {
     
     enum Action {
         case append(log: Log)
+        case clear
     }
     
     func send(_ action: Action) {
         switch action {
         case .append(let log):
             logs.append(log)
+        case .clear:
+            logs.removeAll()
         }
     }
 }

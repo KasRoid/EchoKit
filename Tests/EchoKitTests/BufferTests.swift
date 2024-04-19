@@ -26,4 +26,9 @@ final class BufferTests: XCTestCase {
         XCTAssertEqual(log, sut.logs.first)
         XCTAssertTrue(sut.logs.count == 1)
     }
+    
+    func testClearLogs() {
+        sut.send(.clear)
+        XCTAssertTrue(sut.logs.isEmpty)
+    }
 }
