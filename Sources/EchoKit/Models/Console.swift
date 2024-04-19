@@ -25,7 +25,8 @@ public struct Console {
 extension Console {
 
     public static func start() {
-        let console = ConsoleView(frame: .zero)
+        let viewModel = ConsoleViewModel()
+        let console = ConsoleView(viewModel: viewModel)
         console.width = UIView.screenWidth
         console.height = UIView.screenHeight / 3
         console.frame.origin = .init(x: 0, y: UIView.screenHeight - console.height)
