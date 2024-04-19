@@ -13,7 +13,7 @@ final class BufferTests: XCTestCase {
     private var sut: Buffer!
     
     override func setUpWithError() throws {
-        sut = Buffer.shared
+        sut = Buffer.mock
     }
 
     override func tearDownWithError() throws {
@@ -30,5 +30,11 @@ final class BufferTests: XCTestCase {
     func testClearLogs() {
         sut.send(.clear)
         XCTAssertTrue(sut.logs.isEmpty)
+    }
+    
+    func testCopyText() {
+        let text = "Some text"
+        sut.send(.copy(text: text))
+        XCTAssertEqual(text, sut.pasteboard.string)
     }
 }

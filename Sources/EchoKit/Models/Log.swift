@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Log: Hashable, Identifiable {
+internal struct Log: Hashable, Identifiable {
     let id: UUID
     let date: Date
     let text: String

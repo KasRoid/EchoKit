@@ -5,21 +5,29 @@
 //  Created by Lukas on 4/19/24.
 //
 
-import Foundation
-
 public struct Console {
     
-    private init() {}
+    internal static let buffer = Buffer.shared
     
+    private init() {}
+}
+
+// MARK: - Public Methods
+extension Console {
+
     public static func start() {}
     
     public static func echo(_ text: String, level: Level = .debug) {
         let log = Log(text: text, level: level)
-        Buffer.shared.send(.append(log: log))
+        buffer.send(.append(log: log))
     }
+}
+
+// MARK: - Methods
+extension Console {
     
-    static func addDivider() {
+    internal static func addDivider() {
         let log = Log(text: "==========", level: .info)
-        Buffer.shared.send(.append(log: log))
+        buffer.send(.append(log: log))
     }
 }

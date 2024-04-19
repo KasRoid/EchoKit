@@ -1,17 +1,28 @@
 //
-//  File.swift
-//  
+//  Buffer.swift
+//
 //
 //  Created by Lukas on 4/19/24.
 //
 
 import Combine
 
-final class Buffer {
+internal final class Buffer {
     
-    static let shared = Buffer()
-    private(set) var logs: [Log] = []
-    private init() {}
+    static let shared = Buffer(.production)
+    static let mock = Buffer(.test)
+    
+    @Published private(set) var logs: [Log] = []
+    private(set) var pasteboard: Pasteboard
+    
+    private init(_ environment: Environment) {
+        pasteboard = switch environment {
+        case .production:
+            SystemPasteboard.shared
+        case .test:
+            MockPasteboard.shared
+        }
+    }
 }
 
 // MARK: - Methods
@@ -20,6 +31,7 @@ extension Buffer {
     enum Action {
         case append(log: Log)
         case clear
+        case copy(text: String)
     }
     
     func send(_ action: Action) {
@@ -28,6 +40,17 @@ extension Buffer {
             logs.append(log)
         case .clear:
             logs.removeAll()
+        case .copy(let text):
+            pasteboard.string = text
         }
+    }
+}
+
+// MARK: - Enums
+extension Buffer {
+    
+    enum Environment {
+        case production
+        case test
     }
 }
