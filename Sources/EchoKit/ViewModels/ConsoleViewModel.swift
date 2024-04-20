@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  ConsoleViewModel.swift
 //  
 //
 //  Created by Lukas on 4/19/24.
@@ -9,19 +9,9 @@ import Combine
 
 internal final class ConsoleViewModel {
     
-    private var cancellables = Set<AnyCancellable>()
+    @Published private(set) var isActivePublisher: AnyPublisher<Bool, Never>
     
-    init() {
-        bind()
-    }
-}
-
-// MARK: - Bindings
-extension ConsoleViewModel {
-    
-    private func bind() {
-        Buffer.shared.$logs
-            .sink { print("New log: ", $0) }
-            .store(in: &cancellables)
+    init(publisher: AnyPublisher<Bool, Never>) {
+        isActivePublisher = publisher
     }
 }

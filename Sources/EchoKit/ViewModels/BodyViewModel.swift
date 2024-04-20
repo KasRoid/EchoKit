@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  BodyViewModel.swift
 //  
 //
 //  Created by Lukas on 4/19/24.
