@@ -24,7 +24,7 @@ final class ConsoleViewModelTests: XCTestCase {
     }
     
     func testIsActivePublisherReceivesUpdate() {
-        var sendingValues = [true, false]
+        let sendingValues = [true, false]
         var receivedValues: [Bool] = []
         
         sut.isActivePublisher
