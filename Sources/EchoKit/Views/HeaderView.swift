@@ -8,9 +8,11 @@
 import Combine
 import UIKit
 
-internal final class HeaderView: UIView {
+internal final class HeaderView: UIView, Echoable {
     
+    @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var windowControls: WindowControls!
+    @IBOutlet private weak var actionButton: UIButton!
     
     private var viewModel: HeaderViewModel!
     private var cancellables = Set<AnyCancellable>()
@@ -25,7 +27,6 @@ internal final class HeaderView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupWithXib()
-        bind()
     }
 }
 
@@ -34,6 +35,7 @@ extension HeaderView {
     
     internal func prepare(viewModel: HeaderViewModel) {
         self.viewModel = viewModel
+        bind()
     }
 }
 
@@ -42,7 +44,11 @@ extension HeaderView {
     
     internal func bind() {
         windowControls.tap
-            .sink { print($0) }
+            .sink { [weak self] in self?.print($0) }
+            .store(in: &cancellables)
+        
+        actionButton.publisher(for: .touchUpInside)
+            .sink { [weak self] _ in self?.viewModel.send(.showActions) }
             .store(in: &cancellables)
     }
 }

@@ -27,7 +27,6 @@ extension Console {
     
     public static func start() {
         makeConsole()
-        setupWindow()
         setupConsole()
     }
     
@@ -53,25 +52,18 @@ extension Console {
         guard shared == nil else { return }
         shared = Console()
     }
-    
+
     private static func setupConsole() {
-        guard let shared else { return }
-        let publisher = shared.$isConsoleActive.eraseToAnyPublisher()
-        let viewModel = ConsoleViewModel(publisher: publisher)
-        let console = ConsoleView(viewModel: viewModel)
-        shared.consoleWindow?.addSubview(console)
-    }
-    
-    private static func setupWindow() {
         let scenes = UIApplication.shared.connectedScenes
-        guard let windowScene = scenes.first as? UIWindowScene else { return }
-        let window = ConsoleWindow(windowScene: windowScene)
+        guard let windowScene = scenes.first as? UIWindowScene, let shared else { return }
+        let publisher = shared.$isConsoleActive.eraseToAnyPublisher()
+        let window = ConsoleWindow(windowScene: windowScene, publisher: publisher)
         window.frame = UIScreen.main.bounds
         window.windowLevel = .alert + 1
         DispatchQueue.main.async {
-            window.makeKeyAndVisible()            
+            window.makeKeyAndVisible()
         }
-        shared?.consoleWindow = window
+        shared.consoleWindow = window
     }
 }
 

@@ -45,6 +45,7 @@ extension BodyView {
     
     private func bind() {
         viewModel.$logs
+            .throttle(for: 0.1, scheduler: DispatchQueue.main, latest: true)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 self?.dataSource?.update(logs: $0)
@@ -58,7 +59,6 @@ extension BodyView {
 extension BodyView {
     
     private func setupUI() {
-        tableView.rowHeight = 14
         tableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 0)
         dataSource = .init(logs: viewModel.logs, tableView: tableView)
     }

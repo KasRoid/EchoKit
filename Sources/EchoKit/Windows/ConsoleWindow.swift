@@ -5,14 +5,17 @@
 //  Created by Lukas on 4/22/24.
 //
 
+import Combine
 import UIKit
 
 internal final class ConsoleWindow: UIWindow {
     
     private let interactiveView = UIView()
     
-    override init(windowScene: UIWindowScene) {
+    init(windowScene: UIWindowScene, publisher: AnyPublisher<Bool, Never>) {
         super.init(windowScene: windowScene)
+        let viewModel = ConsoleViewModel(publisher: publisher)
+        self.rootViewController = ConsoleViewController(viewModel: viewModel, interactiveView: interactiveView)
         setupUI()
     }
     
@@ -23,11 +26,6 @@ internal final class ConsoleWindow: UIWindow {
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         interactiveView.frame.contains(point) ? super.hitTest(point, with: event) : nil
     }
-    
-    override func addSubview(_ view: UIView) {
-        interactiveView.addSubview(view)
-        view.frame = interactiveView.bounds
-    }
 }
 
 // MARK: - UI
@@ -36,14 +34,5 @@ extension ConsoleWindow {
     private func setupUI() {
         backgroundColor = .clear
         windowLevel = .alert + 1
-        setupInteractionView()
-    }
-    
-    private func setupInteractionView() {
-        interactiveView.width = UIView.screenWidth
-        interactiveView.height = UIView.screenHeight / 3
-        interactiveView.backgroundColor = .red
-        interactiveView.frame.origin = .init(x: 0, y: UIView.screenHeight - interactiveView.height)
-        super.addSubview(interactiveView)
     }
 }

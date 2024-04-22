@@ -13,13 +13,9 @@ internal final class ConsoleView: UIView, Echoable {
     @IBOutlet private weak var bodyView: BodyView!
     @IBOutlet private weak var footerView: FooterView!
     
-    private var viewModel: ConsoleViewModel?
-    
-    init(viewModel: ConsoleViewModel) {
-        self.viewModel = viewModel
+    init() {
         super.init(frame: .zero)
         setupWithXib()
-        setupSubViewModels()
     }
     
     required init?(coder: NSCoder) {
@@ -31,14 +27,15 @@ internal final class ConsoleView: UIView, Echoable {
 // MARK: - Methods
 extension ConsoleView {
     
-    internal func prepare(viewModel: ConsoleViewModel) {
-        self.viewModel = viewModel
-        setupSubViewModels()
+    internal func setupHeaderView(viewModel: HeaderViewModel) {
+        headerView.prepare(viewModel: viewModel)
+    }
+
+    internal func setupBodyView(viewModel: BodyViewModel) {
+        bodyView.prepare(viewModel: viewModel)
     }
     
-    internal func setupSubViewModels() {
-        headerView.prepare(viewModel: HeaderViewModel())
-        bodyView.prepare(viewModel: BodyViewModel())
-        footerView.prepare(viewModel: FooterViewModel())
+    internal func setupFooterView(viewModel: FooterViewModel) {
+        footerView.prepare(viewModel: viewModel)
     }
 }
