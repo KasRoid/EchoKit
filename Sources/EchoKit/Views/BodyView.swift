@@ -46,7 +46,10 @@ extension BodyView {
     private func bind() {
         viewModel.$logs
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.dataSource?.update(logs: $0) }
+            .sink { [weak self] in
+                self?.dataSource?.update(logs: $0)
+                self?.scrollTo(log: $0.last)
+            }
             .store(in: &cancellables)
     }
 }
@@ -58,5 +61,10 @@ extension BodyView {
         tableView.rowHeight = 14
         tableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 0)
         dataSource = .init(logs: viewModel.logs, tableView: tableView)
+    }
+    
+    private func scrollTo(log: Log?) {
+        guard let log, let indexPath = dataSource?.indexPath(for: log) else { return }
+        tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
     }
 }
