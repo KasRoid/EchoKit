@@ -12,10 +12,11 @@ public final class Console {
     
     private static var shared: Console?
     internal static let buffer = Buffer.shared
-
+    private var consoleWindow: ConsoleWindow?
+    
     @Published private(set) var isConsoleActive = false
     private var consoleActiveCancellable: AnyCancellable?
-
+    
     private init() {
         bind()
     }
@@ -23,9 +24,10 @@ public final class Console {
 
 // MARK: - Public Methods
 extension Console {
-
+    
     public static func start() {
         makeConsole()
+        setupWindow()
         setupConsole()
     }
     
@@ -57,12 +59,17 @@ extension Console {
         let publisher = shared.$isConsoleActive.eraseToAnyPublisher()
         let viewModel = ConsoleViewModel(publisher: publisher)
         let console = ConsoleView(viewModel: viewModel)
-        console.width = UIView.screenWidth
-        console.height = UIView.screenHeight / 3
-        console.frame.origin = .init(x: 0, y: UIView.screenHeight - console.height)
-        console.layer.zPosition = CGFloat(Float.greatestFiniteMagnitude)
-        guard let keywindow = UIWindow.keyWindow else { return }
-        keywindow.addSubview(console)
+        shared.consoleWindow?.addSubview(console)
+    }
+    
+    private static func setupWindow() {
+        let scenes = UIApplication.shared.connectedScenes
+        guard let windowScene = scenes.first as? UIWindowScene else { return }
+        let window = ConsoleWindow(windowScene: windowScene)
+        window.frame = UIScreen.main.bounds
+        window.windowLevel = .alert + 1
+        window.makeKeyAndVisible()
+        shared?.consoleWindow = window
     }
 }
 
