@@ -68,7 +68,9 @@ extension Console {
         let window = ConsoleWindow(windowScene: windowScene)
         window.frame = UIScreen.main.bounds
         window.windowLevel = .alert + 1
-        window.makeKeyAndVisible()
+        DispatchQueue.main.async {
+            window.makeKeyAndVisible()            
+        }
         shared?.consoleWindow = window
     }
 }
