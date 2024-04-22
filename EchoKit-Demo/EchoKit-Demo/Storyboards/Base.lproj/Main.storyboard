@@ -76,7 +76,7 @@
                             <constraint firstItem="Nan-br-4xJ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="zc0-cD-zGE"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="EchoKit" id="nid-Ao-9Fm"/>
+                    <navigationItem key="navigationItem" title="Demo" id="nid-Ao-9Fm"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
