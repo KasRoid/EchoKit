@@ -18,14 +18,14 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="14:56:22" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mau-Kk-CcN">
-                        <rect key="frame" x="4" y="14.666666666666664" width="51" height="15"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <rect key="frame" x="4" y="15" width="58" height="14"/>
+                        <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="12"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last login: Mon Apr 22" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="klV-dZ-WgH">
-                        <rect key="frame" x="59.000000000000007" y="15" width="127.66666666666669" height="14.333333333333336"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <rect key="frame" x="70" y="15" width="159" height="14"/>
+                        <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="12"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
@@ -34,7 +34,7 @@
                 <constraints>
                     <constraint firstItem="klV-dZ-WgH" firstAttribute="centerY" secondItem="mau-Kk-CcN" secondAttribute="centerY" id="FA6-cv-Ery"/>
                     <constraint firstItem="mau-Kk-CcN" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="4" id="cds-VE-iC8"/>
-                    <constraint firstItem="klV-dZ-WgH" firstAttribute="leading" secondItem="mau-Kk-CcN" secondAttribute="trailing" constant="4" id="q2g-rW-dHD"/>
+                    <constraint firstItem="klV-dZ-WgH" firstAttribute="leading" secondItem="mau-Kk-CcN" secondAttribute="trailing" constant="8" id="q2g-rW-dHD"/>
                     <constraint firstItem="mau-Kk-CcN" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="qNd-rf-i3A"/>
                 </constraints>
             </tableViewCellContentView>
