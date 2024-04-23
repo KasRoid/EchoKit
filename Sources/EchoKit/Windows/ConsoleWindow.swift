@@ -10,12 +10,16 @@ import UIKit
 
 internal final class ConsoleWindow: UIWindow {
     
+    private let viewModel: ConsoleViewModel
     private let interactiveView = UIView()
+    private let bubbleView = BubbleView()
     
     init(windowScene: UIWindowScene, publisher: AnyPublisher<Bool, Never>) {
+        viewModel = ConsoleViewModel(.production, publisher: publisher)
         super.init(windowScene: windowScene)
-        let viewModel = ConsoleViewModel(.production, publisher: publisher)
-        self.rootViewController = ConsoleViewController(viewModel: viewModel, interactiveView: interactiveView)
+        let rootViewController = ConsoleViewController(viewModel: viewModel, interactiveView: interactiveView, bubbleView: bubbleView)
+        self.rootViewController = rootViewController
+        bubbleView.prepare(parentView: rootViewController.view)
         setupUI()
     }
     
@@ -24,7 +28,11 @@ internal final class ConsoleWindow: UIWindow {
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        interactiveView.frame.contains(point) ? super.hitTest(point, with: event) : nil
+        if viewModel.windowState == .closed {
+            return bubbleView.frame.contains(point) ? super.hitTest(point, with: event) : nil
+        } else {
+            return interactiveView.frame.contains(point) ? super.hitTest(point, with: event) : nil
+        }
     }
 }
 

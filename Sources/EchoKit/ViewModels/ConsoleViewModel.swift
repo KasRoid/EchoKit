@@ -36,6 +36,7 @@ extension ConsoleViewModel {
 extension ConsoleViewModel {
     
     internal enum Action {
+        case activateWindow
         case adjustWindow(WindowControls.Action)
         case divider
         case clear
@@ -44,6 +45,8 @@ extension ConsoleViewModel {
     
     internal func send(_ action: Action) {
         switch action {
+        case .activateWindow:
+            windowState = .windowed
         case .adjustWindow(let action):
             controlWindows(action)
         case .divider:

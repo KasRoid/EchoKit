@@ -11,6 +11,7 @@ import UIKit
 internal final class ConsoleViewController: UIViewController, Echoable {
     
     private let interactiveView: UIView
+    private let bubbleView: BubbleView
     private let consoleView = ConsoleView()
     
     private let viewModel: ConsoleViewModel
@@ -20,8 +21,9 @@ internal final class ConsoleViewController: UIViewController, Echoable {
     private lazy var interactiveViewHeightAnchor = interactiveView.heightAnchor.constraint(equalToConstant: UIView.defaultConsoleHeight)
     private lazy var consoleViewHeightAnchor = consoleView.heightAnchor.constraint(equalToConstant: UIView.defaultConsoleHeight)
     
-    init(viewModel: ConsoleViewModel, interactiveView: UIView) {
+    init(viewModel: ConsoleViewModel, interactiveView: UIView, bubbleView: BubbleView) {
         self.interactiveView = interactiveView
+        self.bubbleView = bubbleView
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -76,7 +78,7 @@ extension ConsoleViewController {
                 UIView.animate(withDuration: 0.1) {
                     switch state {
                     case .closed:
-                        self?.consoleView.isHidden = true
+                        break
                     case .fullscreen:
                         self?.consoleView.controlWindow(.fullscreen)
                         self?.consoleViewHeightAnchor.constant = UIView.safeScreenHeight
@@ -89,7 +91,13 @@ extension ConsoleViewController {
                     }
                     self?.view.layoutIfNeeded()
                 }
+                self?.consoleView.isHidden = state == .closed
+                self?.bubbleView.isHidden = state != .closed
             }
+            .store(in: &cancellables)
+        
+        bubbleView.tap
+            .sink { [weak self] in self?.viewModel.send(.activateWindow) }
             .store(in: &cancellables)
     }
 }
@@ -117,7 +125,6 @@ extension ConsoleViewController: ActionProvider {
         let maximumHeightAnchorConstraint = interactiveView.heightAnchor.constraint(greaterThanOrEqualTo: consoleView.heightAnchor)
         maximumHeightAnchorConstraint.priority = .defaultHigh
         interactiveViewHeightAnchor.priority = UILayoutPriority(749)
-        
         NSLayoutConstraint.activate([
             interactiveView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             interactiveView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
