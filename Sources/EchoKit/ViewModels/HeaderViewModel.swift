@@ -20,6 +20,7 @@ internal final class HeaderViewModel {
 extension HeaderViewModel {
     
     enum Action {
+        case adjustWindow(WindowControls.Action)
         case showActions
     }
     

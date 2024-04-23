@@ -44,7 +44,7 @@ extension HeaderView {
     
     internal func bind() {
         windowControls.tap
-            .sink { [weak self] in self?.print($0) }
+            .sink { [weak self] in self?.viewModel.send(.adjustWindow($0)) }
             .store(in: &cancellables)
         
         actionButton.publisher(for: .touchUpInside)

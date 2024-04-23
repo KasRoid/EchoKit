@@ -12,8 +12,13 @@ internal final class ConsoleViewController: UIViewController, Echoable {
     
     private let interactiveView: UIView
     private let consoleView = ConsoleView()
+    
     private let viewModel: ConsoleViewModel
     private var cancellables = Set<AnyCancellable>()
+    
+    @Published private var isPresenting = false
+    private lazy var interactiveViewHeightAnchor = interactiveView.heightAnchor.constraint(equalToConstant: UIView.defaultConsoleHeight)
+    private lazy var consoleViewHeightAnchor = consoleView.heightAnchor.constraint(equalToConstant: UIView.defaultConsoleHeight)
     
     init(viewModel: ConsoleViewModel, interactiveView: UIView) {
         self.interactiveView = interactiveView
@@ -28,6 +33,7 @@ internal final class ConsoleViewController: UIViewController, Echoable {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        bind()
     }
 }
 
@@ -35,6 +41,7 @@ internal final class ConsoleViewController: UIViewController, Echoable {
 extension ConsoleViewController {
     
     private func handleMoreActions(actions: [HeaderViewModel.MoreAction]) {
+        isPresenting = true
         showActionSheet(actions: actions) { [weak self] in
             switch $0 {
             case .share:
@@ -46,7 +53,41 @@ extension ConsoleViewController {
             case .copy:
                 self?.viewModel.send(.copy)
             }
+        } completion: { [weak self] in
+            self?.isPresenting = false
         }
+    }
+}
+
+// MARK: - Bindings
+extension ConsoleViewController {
+    
+    private func bind() {
+        $isPresenting
+            .sink { [weak self] in
+                let constant = $0 ? UIView.screenHeight : UIView.defaultConsoleHeight
+                self?.interactiveViewHeightAnchor.constant = constant
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$windowState
+            .dropFirst()
+            .sink { [weak self] state in
+                UIView.animate(withDuration: 0.1) {
+                    switch state {
+                    case .closed:
+                        self?.consoleViewHeightAnchor.constant = 0
+                    case .fullscreen:
+                        self?.consoleViewHeightAnchor.constant = UIView.safeScreenHeight
+                    case .minimized:
+                        self?.consoleViewHeightAnchor.constant = 30
+                    case .windowed:
+                        self?.consoleViewHeightAnchor.constant = UIView.defaultConsoleHeight
+                    }
+                    self?.view.layoutIfNeeded()
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -54,6 +95,7 @@ extension ConsoleViewController {
 extension ConsoleViewController: ActionProvider {
     
     private func setupUI() {
+        addSubviews()
         setupInteractiveView()
         setupConsole()
         setupHeaderView()
@@ -61,23 +103,48 @@ extension ConsoleViewController: ActionProvider {
         setupFooterView()
     }
     
-    private func setupInteractiveView() {
-        interactiveView.width = UIView.screenWidth
-        interactiveView.height = UIView.screenHeight / 3
-        interactiveView.frame.origin = .init(x: 0, y: UIView.screenHeight - interactiveView.height)
+    private func addSubviews() {
         view.addSubview(interactiveView)
+        interactiveView.addSubview(consoleView)
+        interactiveView.translatesAutoresizingMaskIntoConstraints = false
+        consoleView.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    private func setupInteractiveView() {
+        let maximumHeightAnchorConstraint = interactiveView.heightAnchor.constraint(greaterThanOrEqualTo: consoleView.heightAnchor)
+        maximumHeightAnchorConstraint.priority = .defaultHigh
+        interactiveViewHeightAnchor.priority = UILayoutPriority(749)
+        
+        NSLayoutConstraint.activate([
+            interactiveView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            interactiveView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            interactiveView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            maximumHeightAnchorConstraint,
+            interactiveViewHeightAnchor
+        ])
     }
     
     private func setupConsole() {
-        interactiveView.addSubview(consoleView)
-        consoleView.frame = interactiveView.bounds
+        consoleViewHeightAnchor.priority = .defaultHigh
+        NSLayoutConstraint.activate([
+            consoleView.leadingAnchor.constraint(equalTo: interactiveView.leadingAnchor),
+            consoleView.trailingAnchor.constraint(equalTo: interactiveView.trailingAnchor),
+            consoleView.bottomAnchor.constraint(equalTo: interactiveView.bottomAnchor),
+            consoleViewHeightAnchor
+        ])
     }
     
     private func setupHeaderView() {
         let headerViewModel = HeaderViewModel()
         consoleView.setupHeaderView(viewModel: headerViewModel)
         headerViewModel.publisher
-            .sink { [weak self] _ in self?.handleMoreActions(actions: headerViewModel.moreActions) }
+            .sink { [weak self] in
+                switch $0 {
+                case .adjustWindow(let action):
+                    self?.viewModel.send(.adjustWindow(action))
+                case .showActions:
+                    self?.handleMoreActions(actions: headerViewModel.moreActions) }
+                }
             .store(in: &cancellables)
     }
     
@@ -92,8 +159,10 @@ extension ConsoleViewController: ActionProvider {
     }
     
     private func showActivity() {
+        isPresenting = true
         let items = [viewModel.fullLogs]
         let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        controller.completionWithItemsHandler = { [weak self] _, _, _, _ in self?.isPresenting = false }
         present(controller, animated: true)
     }
 }

@@ -10,6 +10,7 @@ import Combine
 internal final class ConsoleViewModel: Echoable {
     
     @Published private(set) var isActivePublisher: AnyPublisher<Bool, Never>
+    @Published private(set) var windowState: WindowState = .windowed
     private(set) var pasteboard: Pasteboard
     
     internal init(_ environment: Environment, publisher: AnyPublisher<Bool, Never>) {
@@ -35,6 +36,7 @@ extension ConsoleViewModel {
 extension ConsoleViewModel {
     
     internal enum Action {
+        case adjustWindow(WindowControls.Action)
         case divider
         case clear
         case copy
@@ -42,6 +44,8 @@ extension ConsoleViewModel {
     
     internal func send(_ action: Action) {
         switch action {
+        case .adjustWindow(let action):
+            controlWindows(action)
         case .divider:
             let log = Log(text: "==========", level: .info)
             Buffer.shared.send(.append(log: log))
@@ -53,11 +57,33 @@ extension ConsoleViewModel {
     }
 }
 
+// MARK: - Private Functions
+extension ConsoleViewModel {
+    
+    private func controlWindows(_ actions: WindowControls.Action) {
+        switch actions {
+        case .close:
+            windowState = .closed
+        case .minimize:
+            windowState = .minimized
+        case .fullscreen:
+            windowState = windowState == .windowed ? .fullscreen : .windowed
+        }
+    }
+}
+
 // MARK: - Enums
 extension ConsoleViewModel {
     
     internal enum Environment {
         case production
         case test
+    }
+    
+    internal enum WindowState {
+        case fullscreen
+        case minimized
+        case windowed
+        case closed
     }
 }

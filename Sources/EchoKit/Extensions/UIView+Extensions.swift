@@ -33,7 +33,7 @@ internal extension UIView {
     
     var width: CGFloat {
         get {
-            return frame.size.width
+            frame.size.width
         }
         set {
             var newFrame: CGRect = frame
@@ -44,7 +44,7 @@ internal extension UIView {
     
     var height: CGFloat {
         get {
-            return frame.size.height
+            frame.size.height
         }
         set {
             var newFrame: CGRect = frame
@@ -54,10 +54,21 @@ internal extension UIView {
     }
     
     static var screenWidth: CGFloat {
-        return UIScreen.main.bounds.size.width
+        UIScreen.main.bounds.size.width
     }
-
+    
     static var screenHeight: CGFloat {
-        return UIScreen.main.bounds.size.height
+        UIScreen.main.bounds.size.height
+    }
+    
+    static var safeScreenHeight: CGFloat {
+        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
+        let topInset = window?.safeAreaInsets.top ?? 0
+        let bottomInset = window?.safeAreaInsets.bottom ?? 0
+        return UIScreen.main.bounds.height - (topInset + bottomInset)
+    }
+    
+    static var defaultConsoleHeight: CGFloat {
+        screenHeight / 3
     }
 }
