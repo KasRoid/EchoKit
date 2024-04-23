@@ -29,14 +29,14 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fbg-9o-wgg" customClass="BodyView" customModule="EchoKit">
-                    <rect key="frame" x="0.0" y="30" width="383" height="201"/>
+                    <rect key="frame" x="0.0" y="30" width="383" height="167"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Qv-LZ-tR8" customClass="FooterView" customModule="EchoKit">
-                    <rect key="frame" x="0.0" y="231" width="383" height="30"/>
+                    <rect key="frame" x="0.0" y="197" width="383" height="30"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="30" id="aZX-9a-f2D"/>
+                        <constraint firstAttribute="height" priority="250" constant="30" id="aZX-9a-f2D"/>
                     </constraints>
                 </view>
             </subviews>
@@ -44,12 +44,12 @@
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="KB7-M3-crI" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="4Vc-V9-9Gf"/>
-                <constraint firstAttribute="bottom" secondItem="3Qv-LZ-tR8" secondAttribute="bottom" id="4wW-Ui-cUm"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="3Qv-LZ-tR8" secondAttribute="bottom" id="4wW-Ui-cUm"/>
                 <constraint firstItem="3Qv-LZ-tR8" firstAttribute="top" secondItem="fbg-9o-wgg" secondAttribute="bottom" id="Zig-6f-ivM"/>
                 <constraint firstAttribute="trailing" secondItem="KB7-M3-crI" secondAttribute="trailing" id="hZf-oe-uTk"/>
-                <constraint firstItem="3Qv-LZ-tR8" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="k5d-Op-xox"/>
+                <constraint firstItem="3Qv-LZ-tR8" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="k5d-Op-xox"/>
                 <constraint firstItem="fbg-9o-wgg" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="qX5-H3-nlg"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="3Qv-LZ-tR8" secondAttribute="trailing" id="rK6-jc-pjE"/>
+                <constraint firstAttribute="trailing" secondItem="3Qv-LZ-tR8" secondAttribute="trailing" id="rK6-jc-pjE"/>
                 <constraint firstAttribute="trailing" secondItem="fbg-9o-wgg" secondAttribute="trailing" id="wcp-7O-9Ea"/>
                 <constraint firstItem="fbg-9o-wgg" firstAttribute="top" secondItem="KB7-M3-crI" secondAttribute="bottom" id="xhb-EB-Q3f"/>
                 <constraint firstItem="KB7-M3-crI" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="zmg-OC-OcQ"/>
