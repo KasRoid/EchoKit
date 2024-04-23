@@ -10,7 +10,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FooterView">
             <connections>
+                <outlet property="cpuLabel" destination="tUn-L4-OV0" id="JOo-ni-1lF"/>
                 <outlet property="logCountLabel" destination="VPC-6E-0qv" id="Y76-Gu-fEM"/>
+                <outlet property="memoryLabel" destination="BDg-mu-Odb" id="Kbe-mN-Ycf"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -24,13 +26,34 @@
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CPU: 24%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tUn-L4-OV0">
+                    <rect key="frame" x="4" y="0.0" width="68" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="68" id="SAz-lG-c3m"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="12"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Memory: 24.12%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BDg-mu-Odb">
+                    <rect key="frame" x="76" y="0.0" width="102" height="25"/>
+                    <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="12"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstAttribute="bottom" secondItem="BDg-mu-Odb" secondAttribute="bottom" id="EZK-if-1rk"/>
                 <constraint firstItem="VPC-6E-0qv" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Ftx-u6-FYL"/>
+                <constraint firstItem="BDg-mu-Odb" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="atv-DG-hSW"/>
                 <constraint firstAttribute="trailing" secondItem="VPC-6E-0qv" secondAttribute="trailing" constant="4" id="hPc-bx-VwE"/>
+                <constraint firstItem="BDg-mu-Odb" firstAttribute="leading" secondItem="tUn-L4-OV0" secondAttribute="trailing" constant="4" id="joS-3b-zvu"/>
+                <constraint firstItem="tUn-L4-OV0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="4" id="noZ-Vm-OVX"/>
+                <constraint firstAttribute="bottom" secondItem="tUn-L4-OV0" secondAttribute="bottom" id="wTa-cM-DPG"/>
                 <constraint firstAttribute="bottom" secondItem="VPC-6E-0qv" secondAttribute="bottom" id="xhM-HD-YW8"/>
+                <constraint firstItem="tUn-L4-OV0" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="zJm-L5-dah"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="138.1679389312977" y="-270.77464788732397"/>

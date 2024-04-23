@@ -9,19 +9,19 @@ import Combine
 
 internal final class FooterViewModel {
     
-    @Published private(set) var count = 0
-    private var cancellable: AnyCancellable?
-    
-    init() {
-        bind()
+    internal var logCount: AnyPublisher<Int, Never> {
+        Buffer.shared.$logs
+            .map { $0.count }
+            .eraseToAnyPublisher()
     }
-}
-
-// MARK: - Bindings
-extension FooterViewModel {
     
-    private func bind() {
-        cancellable = Buffer.shared.$logs
-            .sink { [weak self] in self?.count = $0.count }
+    internal var cpuUsage: AnyPublisher<Double, Never> {
+        Kernel.shared.$cpuUsage
+            .eraseToAnyPublisher()
+    }
+    
+    internal var memoryUsage: AnyPublisher<(used: Double, total: Double), Never> {
+        Kernel.shared.$memoryUsage
+            .eraseToAnyPublisher()
     }
 }

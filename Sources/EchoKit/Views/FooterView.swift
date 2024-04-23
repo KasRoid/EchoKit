@@ -10,18 +10,21 @@ import UIKit
 
 internal final class FooterView: UIView {
     
+    @IBOutlet private weak var cpuLabel: UILabel!
+    @IBOutlet private weak var memoryLabel: UILabel!
     @IBOutlet private weak var logCountLabel: UILabel!
+    
     private var viewModel: FooterViewModel!
     private var cancellables = Set<AnyCancellable>()
     
-    init(viewModel: FooterViewModel) {
+    internal init(viewModel: FooterViewModel) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupWithXib()
         bind()
     }
     
-    required init?(coder: NSCoder) {
+    internal required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupWithXib()
     }
@@ -40,7 +43,17 @@ extension FooterView {
 extension FooterView {
     
     private func bind() {
-        viewModel.$count
+        viewModel.cpuUsage
+            .map { String(format: "CPU: %1.0f", $0) + "%," }
+            .sink { [weak self] in self?.cpuLabel.text = $0 }
+            .store(in: &cancellables)
+        
+        viewModel.memoryUsage
+            .map { String(format: "Mem: %.2f GB/%.2f GB", $0.used, $0.total) }
+            .sink { [weak self] in self?.memoryLabel.text = $0 }
+            .store(in: &cancellables)
+        
+        viewModel.logCount
             .sink { [weak self] in self?.logCountLabel.text = "\($0)L" }
             .store(in: &cancellables)
     }
