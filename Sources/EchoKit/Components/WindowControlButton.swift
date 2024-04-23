@@ -10,11 +10,13 @@ import UIKit
 
 internal final class WindowControlButtonView: UIView {
     
+    private let dotView = UIView()
     private let button = UIButton()
     
     init(color: UIColor) {
         super.init(frame: .zero)
-        button.backgroundColor = color
+        button.backgroundColor = .clear
+        dotView.backgroundColor = color
         setupUI()
     }
     
@@ -25,7 +27,7 @@ internal final class WindowControlButtonView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        button.layer.cornerRadius = button.frame.height / 2
+        dotView.layer.cornerRadius = dotView.frame.height / 2
     }
 }
 
@@ -39,7 +41,7 @@ extension WindowControlButtonView {
     }
     
     internal func prepare(color: UIColor) {
-        button.backgroundColor = color
+        dotView.backgroundColor = color
     }
 }
 
@@ -49,10 +51,18 @@ extension WindowControlButtonView {
     private func setupUI() {
         backgroundColor = .clear
         addSubview(button)
+        addSubview(dotView)
         button.translatesAutoresizingMaskIntoConstraints = false
+        dotView.translatesAutoresizingMaskIntoConstraints = false
+        dotView.isUserInteractionEnabled = false
         NSLayoutConstraint.activate([
-            button.widthAnchor.constraint(equalToConstant: 14),
-            button.heightAnchor.constraint(equalToConstant: 14),
+            dotView.widthAnchor.constraint(equalToConstant: 14),
+            dotView.heightAnchor.constraint(equalToConstant: 14),
+            dotView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            dotView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            
+            button.widthAnchor.constraint(equalTo: widthAnchor),
+            button.heightAnchor.constraint(equalTo: heightAnchor),
             button.centerXAnchor.constraint(equalTo: centerXAnchor),
             button.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])

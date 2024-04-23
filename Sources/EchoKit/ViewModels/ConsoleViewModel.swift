@@ -69,7 +69,7 @@ extension ConsoleViewModel {
             windowState = .closed
         case .minimize:
             windowState = .minimized
-        case .fullscreen:
+        case .zoom:
             windowState = windowState == .windowed ? .fullscreen : .windowed
         }
     }

@@ -77,17 +77,14 @@ extension ConsoleViewController {
             .sink { [weak self] state in
                 UIView.animate(withDuration: 0.1) {
                     switch state {
-                    case .closed:
-                        break
-                    case .fullscreen:
-                        self?.consoleView.controlWindow(.fullscreen)
-                        self?.consoleViewHeightAnchor.constant = UIView.safeScreenHeight
+                    case .fullscreen, .windowed:
+                        self?.consoleView.controlWindow(.zoom)
+                        self?.consoleViewHeightAnchor.constant = state == .windowed ? UIView.defaultConsoleHeight : UIView.safeScreenHeight
                     case .minimized:
                         self?.consoleView.controlWindow(.minimize)
                         self?.consoleViewHeightAnchor.constant = 30
-                    case .windowed:
-                        self?.consoleView.controlWindow(.fullscreen)
-                        self?.consoleViewHeightAnchor.constant = UIView.defaultConsoleHeight
+                    case .closed:
+                        break
                     }
                     self?.view.layoutIfNeeded()
                 }

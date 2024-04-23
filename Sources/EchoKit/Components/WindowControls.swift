@@ -47,7 +47,7 @@ extension WindowControls {
     internal enum Action {
         case close
         case minimize
-        case fullscreen
+        case zoom
     }
 }
 
@@ -64,7 +64,7 @@ extension WindowControls {
             .store(in: &cancellables)
         
         fullscreenButtonView.tap
-            .sink { [weak self] in self?.subject.send(.fullscreen) }
+            .sink { [weak self] in self?.subject.send(.zoom) }
             .store(in: &cancellables)
     }
 }
