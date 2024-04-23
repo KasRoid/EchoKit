@@ -76,12 +76,15 @@ extension ConsoleViewController {
                 UIView.animate(withDuration: 0.1) {
                     switch state {
                     case .closed:
-                        self?.consoleViewHeightAnchor.constant = 0
+                        self?.consoleView.isHidden = true
                     case .fullscreen:
+                        self?.consoleView.controlWindow(.fullscreen)
                         self?.consoleViewHeightAnchor.constant = UIView.safeScreenHeight
                     case .minimized:
+                        self?.consoleView.controlWindow(.minimize)
                         self?.consoleViewHeightAnchor.constant = 30
                     case .windowed:
+                        self?.consoleView.controlWindow(.fullscreen)
                         self?.consoleViewHeightAnchor.constant = UIView.defaultConsoleHeight
                     }
                     self?.view.layoutIfNeeded()
@@ -144,7 +147,7 @@ extension ConsoleViewController: ActionProvider {
                     self?.viewModel.send(.adjustWindow(action))
                 case .showActions:
                     self?.handleMoreActions(actions: headerViewModel.moreActions) }
-                }
+            }
             .store(in: &cancellables)
     }
     

@@ -49,7 +49,7 @@ extension FooterView {
             .store(in: &cancellables)
         
         viewModel.memoryUsage
-            .map { String(format: "Mem: %.2f GB/%.2f GB", $0.used, $0.total) }
+            .map { String(format: "Mem: %.2fGB / %.2fGB", $0.used, $0.total) }
             .sink { [weak self] in self?.memoryLabel.text = $0 }
             .store(in: &cancellables)
         

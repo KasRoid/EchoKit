@@ -38,4 +38,9 @@ extension ConsoleView {
     internal func setupFooterView(viewModel: FooterViewModel) {
         footerView.prepare(viewModel: viewModel)
     }
+    
+    internal func controlWindow(_ action: WindowControls.Action) {
+        bodyView.isHidden = action == .minimize
+        footerView.isHidden = action == .minimize
+    }
 }

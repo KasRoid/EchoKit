@@ -21,38 +21,43 @@
             <rect key="frame" x="0.0" y="0.0" width="383" height="261"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KB7-M3-crI" customClass="HeaderView" customModule="EchoKit">
-                    <rect key="frame" x="0.0" y="0.0" width="383" height="30"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ln9-Ti-6kQ">
+                    <rect key="frame" x="0.0" y="0.0" width="383" height="227"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KB7-M3-crI" customClass="HeaderView" customModule="EchoKit">
+                            <rect key="frame" x="0.0" y="0.0" width="383" height="30"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="30" id="ROD-rR-zI2"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fbg-9o-wgg" customClass="BodyView" customModule="EchoKit">
+                            <rect key="frame" x="0.0" y="30" width="383" height="167"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="height" priority="250" constant="120" id="CT7-9l-0GQ"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Qv-LZ-tR8" customClass="FooterView" customModule="EchoKit">
+                            <rect key="frame" x="0.0" y="197" width="383" height="30"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="30" id="aZX-9a-f2D"/>
+                            </constraints>
+                        </view>
+                    </subviews>
                     <constraints>
-                        <constraint firstAttribute="height" constant="30" id="ROD-rR-zI2"/>
+                        <constraint firstAttribute="height" priority="250" constant="230" id="Qd1-4B-3eP"/>
                     </constraints>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fbg-9o-wgg" customClass="BodyView" customModule="EchoKit">
-                    <rect key="frame" x="0.0" y="30" width="383" height="167"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Qv-LZ-tR8" customClass="FooterView" customModule="EchoKit">
-                    <rect key="frame" x="0.0" y="197" width="383" height="30"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    <constraints>
-                        <constraint firstAttribute="height" priority="250" constant="30" id="aZX-9a-f2D"/>
-                    </constraints>
-                </view>
+                </stackView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="KB7-M3-crI" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="4Vc-V9-9Gf"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="3Qv-LZ-tR8" secondAttribute="bottom" id="4wW-Ui-cUm"/>
-                <constraint firstItem="3Qv-LZ-tR8" firstAttribute="top" secondItem="fbg-9o-wgg" secondAttribute="bottom" id="Zig-6f-ivM"/>
-                <constraint firstAttribute="trailing" secondItem="KB7-M3-crI" secondAttribute="trailing" id="hZf-oe-uTk"/>
-                <constraint firstItem="3Qv-LZ-tR8" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="k5d-Op-xox"/>
-                <constraint firstItem="fbg-9o-wgg" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="qX5-H3-nlg"/>
-                <constraint firstAttribute="trailing" secondItem="3Qv-LZ-tR8" secondAttribute="trailing" id="rK6-jc-pjE"/>
-                <constraint firstAttribute="trailing" secondItem="fbg-9o-wgg" secondAttribute="trailing" id="wcp-7O-9Ea"/>
-                <constraint firstItem="fbg-9o-wgg" firstAttribute="top" secondItem="KB7-M3-crI" secondAttribute="bottom" id="xhb-EB-Q3f"/>
-                <constraint firstItem="KB7-M3-crI" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="zmg-OC-OcQ"/>
+                <constraint firstItem="ln9-Ti-6kQ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="5hq-Fo-IEi"/>
+                <constraint firstItem="ln9-Ti-6kQ" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="Tuf-wZ-gwu"/>
+                <constraint firstItem="ln9-Ti-6kQ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Twq-rb-cRw"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="ln9-Ti-6kQ" secondAttribute="bottom" id="deH-Ah-pum"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="264.8854961832061" y="-215.14084507042256"/>
