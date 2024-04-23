@@ -10,7 +10,7 @@ import UIKit
 
 public final class Console {
     
-    private static var shared: Console?
+    private static var shared = Console()
     internal static let buffer = Buffer.shared
     private var consoleWindow: ConsoleWindow?
     
@@ -26,7 +26,6 @@ public final class Console {
 extension Console {
     
     public static func start() {
-        makeConsole()
         setupConsole()
     }
     
@@ -47,15 +46,10 @@ extension Console {
 
 // MARK: - Private Functions
 extension Console {
-    
-    private static func makeConsole() {
-        guard shared == nil else { return }
-        shared = Console()
-    }
 
     private static func setupConsole() {
         let scenes = UIApplication.shared.connectedScenes
-        guard let windowScene = scenes.first as? UIWindowScene, let shared else { return }
+        guard let windowScene = scenes.first as? UIWindowScene else { return }
         let publisher = shared.$isConsoleActive.eraseToAnyPublisher()
         let window = ConsoleWindow(windowScene: windowScene, publisher: publisher)
         window.frame = UIScreen.main.bounds

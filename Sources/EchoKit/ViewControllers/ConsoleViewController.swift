@@ -11,7 +11,7 @@ import UIKit
 internal final class ConsoleViewController: UIViewController, Echoable {
     
     private let interactiveView: UIView
-    private var console: ConsoleView?
+    private let consoleView = ConsoleView()
     private let viewModel: ConsoleViewModel
     private var cancellables = Set<AnyCancellable>()
     
@@ -60,15 +60,13 @@ extension ConsoleViewController: ActionProvider {
     }
     
     private func setupConsole() {
-        let console = ConsoleView()
-        interactiveView.addSubview(console)
-        console.frame = interactiveView.bounds
-        self.console = console
+        interactiveView.addSubview(consoleView)
+        consoleView.frame = interactiveView.bounds
     }
     
     private func setupHeaderView() {
         let headerViewModel = HeaderViewModel()
-        console?.setupHeaderView(viewModel: headerViewModel)
+        consoleView.setupHeaderView(viewModel: headerViewModel)
         headerViewModel.publisher
             .sink { [weak self] _ in self?.handleMoreActions(actions: headerViewModel.moreActions) }
             .store(in: &cancellables)
@@ -76,11 +74,11 @@ extension ConsoleViewController: ActionProvider {
     
     private func setupBodyView() {
         let bodyViewModel = BodyViewModel()
-        console?.setupBodyView(viewModel: bodyViewModel)
+        consoleView.setupBodyView(viewModel: bodyViewModel)
     }
     
     private func setupFooterView() {
         let footerViewModel = FooterViewModel()
-        console?.setupFooterView(viewModel: footerViewModel)
+        consoleView.setupFooterView(viewModel: footerViewModel)
     }
 }
