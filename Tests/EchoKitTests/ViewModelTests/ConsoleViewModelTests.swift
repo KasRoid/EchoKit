@@ -23,6 +23,16 @@ final class ConsoleViewModelTests: XCTestCase {
         sut = nil
     }
     
+    func testInitializer() {
+        let mockViewModel = ConsoleViewModel(.test, publisher: sut.isActivePublisher)
+        let mockPasteboard = mockViewModel.pasteboard as? MockPasteboard
+        XCTAssertTrue(mockPasteboard != nil)
+        
+        let productionViewModel = ConsoleViewModel(.production, publisher: sut.isActivePublisher)
+        let systemPasteboard = productionViewModel.pasteboard as? SystemPasteboard
+        XCTAssertTrue(systemPasteboard != nil)
+    }
+    
     func testIsActivePublisherReceivesUpdate() {
         let sendingValues = [true, false]
         var receivedValues: [Bool] = []
@@ -37,9 +47,21 @@ final class ConsoleViewModelTests: XCTestCase {
         XCTAssertEqual(sendingValues, receivedValues)
     }
     
-    func testCopyText() {
+    func testClearLogs() {
+        sut.send(.clear)
+        let isEmpty = Buffer.shared.logs.isEmpty
+        XCTAssertTrue(isEmpty)
+    }
+    
+    func testCopyLogs() {
         let texts = Buffer.shared.allTexts
         sut.send(.copy)
         XCTAssertEqual(texts, sut.pasteboard.string)
+    }
+    
+    func testAddDivider() {
+        sut.send(.divider)
+        let isDivider = Buffer.shared.logs.last?.text.contains("==========") ?? false
+        XCTAssertTrue(isDivider)
     }
 }

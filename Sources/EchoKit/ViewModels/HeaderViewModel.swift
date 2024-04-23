@@ -32,6 +32,7 @@ extension HeaderViewModel {
 extension HeaderViewModel {
     
     enum MoreAction: String, CaseIterable {
+        case divider = "Divider"
         case copy = "Copy"
         case clear = "Clear"
     }

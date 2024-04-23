@@ -37,6 +37,8 @@ extension ConsoleViewController {
     private func handleMoreActions(actions: [HeaderViewModel.MoreAction]) {
         showActionSheet(actions: actions) { [weak self] in
             switch $0 {
+            case .divider:
+                self?.viewModel.send(.divider)
             case .clear:
                 self?.viewModel.send(.clear)
             case .copy:

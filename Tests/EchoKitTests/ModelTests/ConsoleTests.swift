@@ -15,13 +15,4 @@ final class ConsoleTests: XCTestCase {
         Console.echo(text)
         XCTAssertEqual(text, Console.buffer.logs.last?.text)
     }
-    
-    func testAddDivider() {
-        Console.addDivider()
-        if let log = Console.buffer.logs.last {
-            XCTAssertTrue(log.text.contains("=========="))
-        } else {
-            XCTFail()
-        }
-    }
 }

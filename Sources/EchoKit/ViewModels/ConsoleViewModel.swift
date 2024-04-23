@@ -27,12 +27,16 @@ internal final class ConsoleViewModel: Echoable {
 extension ConsoleViewModel {
     
     internal enum Action {
+        case divider
         case clear
         case copy
     }
     
     internal func send(_ action: Action) {
         switch action {
+        case .divider:
+            let log = Log(text: "==========", level: .info)
+            Buffer.shared.send(.append(log: log))
         case .clear:
             Buffer.shared.send(.clear)
         case .copy:

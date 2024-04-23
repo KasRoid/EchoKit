@@ -35,15 +35,6 @@ extension Console {
     }
 }
 
-// MARK: - Methods
-extension Console {
-    
-    internal static func addDivider() {
-        let log = Log(text: "==========", level: .info)
-        buffer.send(.append(log: log))
-    }
-}
-
 // MARK: - Private Functions
 extension Console {
 
