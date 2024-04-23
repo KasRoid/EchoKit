@@ -15,3 +15,21 @@ internal final class ConsoleViewModel {
         isActivePublisher = publisher
     }
 }
+
+// MARK: - Action
+extension ConsoleViewModel {
+    
+    enum Action {
+        case clear
+        case copy
+    }
+    
+    func send(_ action: Action) {
+        switch action {
+        case .clear:
+            Buffer.shared.send(.clear)
+        case .copy:
+            print("Copy")
+        }
+    }
+}

@@ -35,8 +35,13 @@ internal final class ConsoleViewController: UIViewController, Echoable {
 extension ConsoleViewController {
     
     private func handleMoreActions(actions: [HeaderViewModel.MoreAction]) {
-        showActionSheet(actions: actions) { [weak self] action in
-            self?.print(action)
+        showActionSheet(actions: actions) { [weak self] in
+            switch $0 {
+            case .clear:
+                self?.viewModel.send(.clear)
+            case .copy:
+                self?.viewModel.send(.copy)
+            }
         }
     }
 }
