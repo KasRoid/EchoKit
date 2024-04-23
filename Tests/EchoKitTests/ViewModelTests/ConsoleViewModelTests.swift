@@ -16,7 +16,7 @@ final class ConsoleViewModelTests: XCTestCase {
     private var cancellables = Set<AnyCancellable>()
 
     override func setUpWithError() throws {
-        sut = ConsoleViewModel(publisher: subject.eraseToAnyPublisher())
+        sut = ConsoleViewModel(.test, publisher: subject.eraseToAnyPublisher())
     }
 
     override func tearDownWithError() throws {
@@ -35,5 +35,11 @@ final class ConsoleViewModelTests: XCTestCase {
             subject.send(value)
         }
         XCTAssertEqual(sendingValues, receivedValues)
+    }
+    
+    func testCopyText() {
+        let texts = Buffer.shared.allTexts
+        sut.send(.copy)
+        XCTAssertEqual(texts, sut.pasteboard.string)
     }
 }

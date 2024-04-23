@@ -14,7 +14,7 @@ internal final class ConsoleWindow: UIWindow {
     
     init(windowScene: UIWindowScene, publisher: AnyPublisher<Bool, Never>) {
         super.init(windowScene: windowScene)
-        let viewModel = ConsoleViewModel(publisher: publisher)
+        let viewModel = ConsoleViewModel(.production, publisher: publisher)
         self.rootViewController = ConsoleViewController(viewModel: viewModel, interactiveView: interactiveView)
         setupUI()
     }

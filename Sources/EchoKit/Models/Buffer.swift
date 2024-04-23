@@ -9,48 +9,37 @@ import Combine
 
 internal final class Buffer {
     
-    static let shared = Buffer(.production)
-    static let mock = Buffer(.test)
+    static let shared = Buffer()
     
     @Published private(set) var logs: [Log] = []
-    private(set) var pasteboard: Pasteboard
-    
-    private init(_ environment: Environment) {
-        pasteboard = switch environment {
-        case .production:
-            SystemPasteboard.shared
-        case .test:
-            MockPasteboard.shared
-        }
-    }
 }
 
 // MARK: - Methods
 extension Buffer {
     
-    enum Action {
+    internal var allTexts: String {
+        logs.reduce(into: "") {
+            $0 += "\($1.date.HHmmss) \($1.text)"
+            guard logs.last != $1 else { return }
+            $0 += "\n"
+        }
+    }
+}
+
+// MARK: - Action
+extension Buffer {
+    
+    internal enum Action {
         case append(log: Log)
         case clear
-        case copy(text: String)
     }
     
-    func send(_ action: Action) {
+    internal func send(_ action: Action) {
         switch action {
         case .append(let log):
             logs.append(log)
         case .clear:
             logs.removeAll()
-        case .copy(let text):
-            pasteboard.string = text
         }
-    }
-}
-
-// MARK: - Enums
-extension Buffer {
-    
-    enum Environment {
-        case production
-        case test
     }
 }
