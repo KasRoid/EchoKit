@@ -23,6 +23,14 @@ internal final class ConsoleViewModel: Echoable {
     }
 }
 
+// MARK: - Methods
+extension ConsoleViewModel {
+    
+    var fullLogs: String {
+        Buffer.shared.fullLogs
+    }
+}
+
 // MARK: - Action
 extension ConsoleViewModel {
     
@@ -40,7 +48,7 @@ extension ConsoleViewModel {
         case .clear:
             Buffer.shared.send(.clear)
         case .copy:
-            pasteboard.string = Buffer.shared.allTexts
+            pasteboard.string = fullLogs
         }
     }
 }

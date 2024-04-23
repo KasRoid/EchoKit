@@ -17,7 +17,7 @@ internal final class Buffer {
 // MARK: - Methods
 extension Buffer {
     
-    internal var allTexts: String {
+    internal var fullLogs: String {
         logs.reduce(into: "") {
             $0 += "\($1.date.HHmmss) \($1.text)"
             guard logs.last != $1 else { return }

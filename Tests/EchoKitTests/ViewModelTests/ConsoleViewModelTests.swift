@@ -54,7 +54,7 @@ final class ConsoleViewModelTests: XCTestCase {
     }
     
     func testCopyLogs() {
-        let texts = Buffer.shared.allTexts
+        let texts = Buffer.shared.fullLogs
         sut.send(.copy)
         XCTAssertEqual(texts, sut.pasteboard.string)
     }

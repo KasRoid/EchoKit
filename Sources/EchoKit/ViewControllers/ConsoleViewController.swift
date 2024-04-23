@@ -37,6 +37,8 @@ extension ConsoleViewController {
     private func handleMoreActions(actions: [HeaderViewModel.MoreAction]) {
         showActionSheet(actions: actions) { [weak self] in
             switch $0 {
+            case .share:
+                self?.showActivity()
             case .divider:
                 self?.viewModel.send(.divider)
             case .clear:
@@ -87,5 +89,11 @@ extension ConsoleViewController: ActionProvider {
     private func setupFooterView() {
         let footerViewModel = FooterViewModel()
         consoleView.setupFooterView(viewModel: footerViewModel)
+    }
+    
+    private func showActivity() {
+        let items = [viewModel.fullLogs]
+        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        present(controller, animated: true)
     }
 }
