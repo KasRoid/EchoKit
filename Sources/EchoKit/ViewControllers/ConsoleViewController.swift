@@ -156,7 +156,8 @@ extension ConsoleViewController: ActionProvider {
     }
     
     private func setupBodyView() {
-        let bodyViewModel = BodyViewModel()
+        let pasteboard = SystemPasteboard.shared
+        let bodyViewModel = BodyViewModel(pasteboard: pasteboard)
         consoleView.setupBodyView(viewModel: bodyViewModel)
     }
     

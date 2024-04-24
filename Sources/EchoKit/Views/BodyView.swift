@@ -52,6 +52,19 @@ extension BodyView {
                 self?.scrollTo(log: $0.last)
             }
             .store(in: &cancellables)
+        
+        dataSource?.tap
+            .sink { print($0) }
+            .store(in: &cancellables)
+        
+        dataSource?.interaction
+            .sink { [weak self] log, interaction in
+                switch interaction {
+                case .copy:
+                    self?.viewModel.send(.copy(log))
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
