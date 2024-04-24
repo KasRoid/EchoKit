@@ -16,7 +16,7 @@ internal final class BodyView: UIView {
     private var dataSource: ConsoleDataSource?
     private var cancellables = Set<AnyCancellable>()
     
-    init(viewModel: BodyViewModel) {
+    internal init(viewModel: BodyViewModel) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupWithXib()

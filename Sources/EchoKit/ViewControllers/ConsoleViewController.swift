@@ -18,13 +18,13 @@ internal final class ConsoleViewController: UIViewController, Echoable {
     private var cancellables = Set<AnyCancellable>()
     
     @Published private var isPresenting = false
-    private lazy var interactiveViewHeightAnchor = interactiveView.heightAnchor.constraint(equalToConstant: UIView.defaultConsoleHeight)
+    private lazy var interactiveViewHeightAnchor = interactiveView.heightAnchor.constraint(equalToConstant: 0)
     private lazy var consoleViewHeightAnchor = consoleView.heightAnchor.constraint(equalToConstant: UIView.defaultConsoleHeight)
     
-    init(viewModel: ConsoleViewModel, interactiveView: UIView, bubbleView: BubbleView) {
+    internal init(viewModel: ConsoleViewModel, interactiveView: UIView, bubbleView: BubbleView) {
+        self.viewModel = viewModel
         self.interactiveView = interactiveView
         self.bubbleView = bubbleView
-        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -67,7 +67,7 @@ extension ConsoleViewController {
     private func bind() {
         $isPresenting
             .sink { [weak self] in
-                let constant = $0 ? UIView.screenHeight : UIView.defaultConsoleHeight
+                let constant = $0 ? UIView.screenHeight : 0
                 self?.interactiveViewHeightAnchor.constant = constant
             }
             .store(in: &cancellables)
