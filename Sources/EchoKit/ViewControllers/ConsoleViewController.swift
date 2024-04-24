@@ -48,6 +48,10 @@ extension ConsoleViewController {
             switch $0 {
             case .share:
                 self?.showActivity()
+            case .buidInfo:
+                self?.viewModel.send(.showBuildInfo)
+            case .systemInfo:
+                self?.viewModel.send(.showSystemInfo)
             case .divider:
                 self?.viewModel.send(.divider)
             case .clear:

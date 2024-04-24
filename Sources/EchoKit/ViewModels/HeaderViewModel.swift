@@ -33,6 +33,8 @@ extension HeaderViewModel {
 extension HeaderViewModel {
     
     enum MoreAction: String, CaseIterable {
+        case systemInfo = "System Info"
+        case buidInfo = "Build Info"
         case share = "Share"
         case divider = "Divider"
         case copy = "Copy"

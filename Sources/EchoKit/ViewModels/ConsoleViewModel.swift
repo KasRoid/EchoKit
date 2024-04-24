@@ -6,6 +6,7 @@
 //
 
 import Combine
+import UIKit
 
 internal final class ConsoleViewModel: Echoable {
     
@@ -41,6 +42,8 @@ extension ConsoleViewModel {
         case divider
         case clear
         case copy
+        case showBuildInfo
+        case showSystemInfo
     }
     
     internal func send(_ action: Action) {
@@ -56,6 +59,10 @@ extension ConsoleViewModel {
             Buffer.shared.send(.clear)
         case .copy:
             pasteboard.string = fullLogs
+        case .showBuildInfo:
+            Console.echo(Project.info)
+        case .showSystemInfo:
+            Console.echo(System.info)
         }
     }
 }

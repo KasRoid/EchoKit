@@ -15,9 +15,11 @@ internal final class CPU: NSObject {
     private static var cpuType: Int {
         Int(hostBasicInfo.cpu_type)
     }
+    
     private static var cpuSubType: Int {
         Int(hostBasicInfo.cpu_subtype)
     }
+    
     private static var cpuArch: String {
         switch hostBasicInfo.cpu_type {
         case CPU_TYPE_ARM:
