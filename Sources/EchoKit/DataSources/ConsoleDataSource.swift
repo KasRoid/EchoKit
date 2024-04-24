@@ -41,12 +41,12 @@ internal final class ConsoleDataSource: UITableViewDiffableDataSource<Section, L
 // MARK: - UITableViewDelegate
 extension ConsoleDataSource: UITableViewDelegate {
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    internal func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let log = itemIdentifier(for: indexPath) else { return }
         _tap.send(log)
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    internal func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         for interaction in cell.interactions where interaction is UIContextMenuInteraction {
             cell.removeInteraction(interaction)
         }
@@ -58,7 +58,7 @@ extension ConsoleDataSource: UITableViewDelegate {
 // MARK: - UIContextMenuInteractionDelegate
 extension ConsoleDataSource: UIContextMenuInteractionDelegate {
     
-    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+    internal func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         guard let indexPath = tableView.indexPathForRow(at: location), let log = itemIdentifier(for: indexPath) else { return nil }
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
             let children = Interaction.allCases.map { interaction in UIAction(title: interaction.rawValue) { [weak self] _ in
@@ -68,7 +68,7 @@ extension ConsoleDataSource: UIContextMenuInteractionDelegate {
         }
     }
     
-    enum Interaction: String, CaseIterable {
+    internal enum Interaction: String, CaseIterable {
         case copy = "Copy"
     }
 }

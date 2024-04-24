@@ -66,8 +66,10 @@ extension ConsoleViewModel {
     private func controlWindows(_ actions: WindowControls.Action) {
         switch actions {
         case .close:
+            guard windowState != .closed else { return }
             windowState = .closed
         case .minimize:
+            guard windowState != .minimized else { return }
             windowState = .minimized
         case .zoom:
             windowState = windowState == .windowed ? .fullscreen : .windowed
