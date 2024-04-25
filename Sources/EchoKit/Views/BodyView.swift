@@ -10,10 +10,12 @@ import UIKit
 
 internal final class BodyView: UIView {
     
-    @IBOutlet private weak var tableView: UITableView!
+    @IBOutlet private weak var consoleTableView: UITableView!
+    @IBOutlet private weak var detailTableView: UITableView!
     
     private var viewModel: BodyViewModel!
-    private var dataSource: ConsoleDataSource?
+    private var consoleDataSource: ConsoleDataSource?
+    private var detailDataSource: DetailDataSource?
     private var cancellables = Set<AnyCancellable>()
     
     internal init(viewModel: BodyViewModel) {
@@ -48,16 +50,27 @@ extension BodyView {
             .throttle(for: 0.1, scheduler: DispatchQueue.main, latest: true)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
-                self?.dataSource?.update(logs: $0)
+                self?.consoleDataSource?.update(logs: $0)
                 self?.scrollTo(log: $0.last)
             }
             .store(in: &cancellables)
         
-        dataSource?.tap
-            .sink { print($0) }
+        viewModel.$selectedLog
+            .sink { [weak self] in
+                self?.detailTableView.isHidden = $0 == nil
+                if let log = $0 {
+                    self?.setupDetailDataSource(with: log)
+                } else {
+                    self?.detailDataSource = nil
+                }
+            }
             .store(in: &cancellables)
         
-        dataSource?.interaction
+        consoleDataSource?.tap
+            .sink { [weak self] in self?.viewModel.send(.showDetail($0)) }
+            .store(in: &cancellables)
+        
+        consoleDataSource?.interaction
             .sink { [weak self] log, interaction in
                 switch interaction {
                 case .copy:
@@ -72,12 +85,17 @@ extension BodyView {
 extension BodyView {
     
     private func setupUI() {
-        tableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 0)
-        dataSource = .init(logs: viewModel.logs, tableView: tableView)
+        consoleTableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 0)
+        consoleDataSource = .init(tableView: consoleTableView)
     }
     
     private func scrollTo(log: Log?) {
-        guard let log, let indexPath = dataSource?.indexPath(for: log) else { return }
-        tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
+        guard let log, let indexPath = consoleDataSource?.indexPath(for: log) else { return }
+        consoleTableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
+    }
+    
+    private func setupDetailDataSource(with log: Log) {
+        detailDataSource = .init(tableView: detailTableView)
+        detailDataSource?.update(log: log)
     }
 }

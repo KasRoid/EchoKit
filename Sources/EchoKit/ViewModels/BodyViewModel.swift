@@ -10,12 +10,32 @@ import Combine
 internal final class BodyViewModel {
     
     @Published private(set) var logs: [Log] = []
-    private var pasteboard: Pasteboard
-    private var cancellable: AnyCancellable?
+    @Published private(set) var selectedLog: Log?
+    private(set) var pasteboard: Pasteboard
+    private let quitPublisher: AnyPublisher<Void, Never>
+    private var cancellables = Set<AnyCancellable>()
     
-    internal init(pasteboard: Pasteboard) {
-        self.pasteboard = pasteboard
+    internal init(environment: Environment, quitPublisher: AnyPublisher<Void, Never>) {
+        self.pasteboard = switch environment {
+        case .production:
+            SystemPasteboard.shared
+        case .test:
+            MockPasteboard.shared
+        }
+        self.quitPublisher = quitPublisher
         bind()
+    }
+}
+
+// MARK: - Methods
+extension BodyViewModel {
+    
+    internal var logSelected: AnyPublisher<Void, Never> {
+        $selectedLog
+            .dropFirst()
+            .filter { $0 != nil }
+            .map { _ in Void() }
+            .eraseToAnyPublisher()
     }
 }
 
@@ -23,8 +43,13 @@ internal final class BodyViewModel {
 extension BodyViewModel {
     
     private func bind() {
-        cancellable = Buffer.shared.$logs
+        Buffer.shared.$logs
             .sink { [weak self] in self?.logs = $0 }
+            .store(in: &cancellables)
+        
+        quitPublisher
+            .sink { [weak self] in self?.selectedLog = nil }
+            .store(in: &cancellables)
     }
 }
 
@@ -33,12 +58,15 @@ extension BodyViewModel {
     
     internal enum Action {
         case copy(Log)
+        case showDetail(Log)
     }
     
     internal func send(_ action: Action) {
         switch action {
         case .copy(let log):
             pasteboard.string = "\(log.date.HHmmss) \(log.text)"
+        case .showDetail(let log):
+            selectedLog = log
         }
     }
 }

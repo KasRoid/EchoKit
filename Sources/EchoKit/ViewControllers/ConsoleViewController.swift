@@ -14,10 +14,12 @@ internal final class ConsoleViewController: UIViewController, Echoable {
     private let bubbleView: BubbleView
     private let consoleView = ConsoleView()
     
+    @Published private(set) var isPresenting = false
+    @Published private(set) var isQuitable = false
+    
     private let viewModel: ConsoleViewModel
     private var cancellables = Set<AnyCancellable>()
     
-    @Published private var isPresenting = false
     private lazy var interactiveViewHeightAnchor = interactiveView.heightAnchor.constraint(equalToConstant: 0)
     private lazy var consoleViewHeightAnchor = consoleView.heightAnchor.constraint(equalToConstant: UIView.defaultConsoleHeight)
     
@@ -26,6 +28,7 @@ internal final class ConsoleViewController: UIViewController, Echoable {
         self.interactiveView = interactiveView
         self.bubbleView = bubbleView
         super.init(nibName: nil, bundle: nil)
+        bubbleView.prepare(parentView: view)
     }
     
     required init?(coder: NSCoder) {
@@ -58,6 +61,8 @@ extension ConsoleViewController {
                 self?.viewModel.send(.clear)
             case .copy:
                 self?.viewModel.send(.copy)
+            case .quit:
+                self?.isQuitable = false
             }
         } completion: { [weak self] in
             self?.isPresenting = false
@@ -146,7 +151,10 @@ extension ConsoleViewController: ActionProvider {
     }
     
     private func setupHeaderView() {
-        let headerViewModel = HeaderViewModel()
+        let isQuitablePublisher = $isQuitable
+            .dropFirst()
+            .eraseToAnyPublisher()
+        let headerViewModel = HeaderViewModel(isQuitablePublisher: isQuitablePublisher)
         consoleView.setupHeaderView(viewModel: headerViewModel)
         headerViewModel.publisher
             .sink { [weak self] in
@@ -160,8 +168,15 @@ extension ConsoleViewController: ActionProvider {
     }
     
     private func setupBodyView() {
-        let pasteboard = SystemPasteboard.shared
-        let bodyViewModel = BodyViewModel(pasteboard: pasteboard)
+        let quitPublisher = $isQuitable
+            .dropFirst()
+            .filter { !$0 }
+            .map { _ in Void() }
+            .eraseToAnyPublisher()
+        let bodyViewModel = BodyViewModel(environment: .production, quitPublisher: quitPublisher)
+        bodyViewModel.logSelected
+            .sink { [weak self] in self?.isQuitable = true }
+            .store(in: &cancellables)
         consoleView.setupBodyView(viewModel: bodyViewModel)
     }
     

@@ -16,7 +16,7 @@ final class ConsoleViewModelTests: XCTestCase {
     private var cancellables = Set<AnyCancellable>()
 
     override func setUpWithError() throws {
-        sut = ConsoleViewModel(.test, publisher: subject.eraseToAnyPublisher())
+        sut = ConsoleViewModel(.test)
     }
 
     override func tearDownWithError() throws {
@@ -24,27 +24,13 @@ final class ConsoleViewModelTests: XCTestCase {
     }
     
     func testInitializer() {
-        let mockViewModel = ConsoleViewModel(.test, publisher: sut.isActivePublisher)
+        let mockViewModel = ConsoleViewModel(.test)
         let mockPasteboard = mockViewModel.pasteboard as? MockPasteboard
         XCTAssertTrue(mockPasteboard != nil)
         
-        let productionViewModel = ConsoleViewModel(.production, publisher: sut.isActivePublisher)
+        let productionViewModel = ConsoleViewModel(.production)
         let systemPasteboard = productionViewModel.pasteboard as? SystemPasteboard
         XCTAssertTrue(systemPasteboard != nil)
-    }
-    
-    func testIsActivePublisherReceivesUpdate() {
-        let sendingValues = [true, false]
-        var receivedValues: [Bool] = []
-        
-        sut.isActivePublisher
-            .sink { receivedValues.append($0) }
-            .store(in: &cancellables)
-        
-        for value in sendingValues {
-            subject.send(value)
-        }
-        XCTAssertEqual(sendingValues, receivedValues)
     }
     
     func testClearLogs() {

@@ -14,12 +14,7 @@ public final class Console {
     internal static let buffer = Buffer.shared
     private var consoleWindow: ConsoleWindow?
     
-    @Published private(set) var isConsoleActive = false
-    private var consoleActiveCancellable: AnyCancellable?
-    
-    private init() {
-        bind()
-    }
+    private init() {}
 }
 
 // MARK: - Public Methods
@@ -41,22 +36,13 @@ extension Console {
     private static func setupConsole() {
         let scenes = UIApplication.shared.connectedScenes
         guard let windowScene = scenes.first as? UIWindowScene else { return }
-        let publisher = shared.$isConsoleActive.eraseToAnyPublisher()
-        let window = ConsoleWindow(windowScene: windowScene, publisher: publisher)
+        let viewModel = ConsoleViewModel(.production)
+        let window = ConsoleWindow(windowScene: windowScene, viewModel: viewModel)
         window.frame = UIScreen.main.bounds
         window.windowLevel = .alert + 1
         DispatchQueue.main.async {
             window.makeKeyAndVisible()
         }
         shared.consoleWindow = window
-    }
-}
-
-// MARK: - Bindings
-extension Console {
-    
-    private func bind() {
-        consoleActiveCancellable = Notification.consoleDidTogglePublisher
-            .sink { [weak self] in self?.isConsoleActive = $0 }
     }
 }

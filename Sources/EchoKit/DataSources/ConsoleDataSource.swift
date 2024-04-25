@@ -12,14 +12,14 @@ internal final class ConsoleDataSource: UITableViewDiffableDataSource<Section, L
     
     internal typealias ConsoleCell = ConsoleTextTableViewCell
     
-    private let tableView: UITableView
+    private weak var tableView: UITableView?
     private let _tap = PassthroughSubject<Log, Never>()
     private let _interaction = PassthroughSubject<(log: Log, interaction: Interaction), Never>()
     
     internal var tap: AnyPublisher<Log, Never> { _tap.eraseToAnyPublisher() }
     internal var interaction: AnyPublisher<(log: Log, interaction: Interaction), Never> { _interaction.eraseToAnyPublisher() }
     
-    internal init(logs: [Log], tableView: UITableView) {
+    internal init(tableView: UITableView) {
         self.tableView = tableView
         super.init(tableView: tableView) { tableView, indexPath, log in
             let cell = tableView.dequeueReusableCell(withIdentifier: ConsoleCell.identifier, for: indexPath) as? ConsoleCell
@@ -59,7 +59,7 @@ extension ConsoleDataSource: UITableViewDelegate {
 extension ConsoleDataSource: UIContextMenuInteractionDelegate {
     
     internal func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
-        guard let indexPath = tableView.indexPathForRow(at: location), let log = itemIdentifier(for: indexPath) else { return nil }
+        guard let indexPath = tableView?.indexPathForRow(at: location), let log = itemIdentifier(for: indexPath) else { return nil }
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
             let children = Interaction.allCases.map { interaction in UIAction(title: interaction.rawValue) { [weak self] _ in
                 self?._interaction.send((log, interaction))

@@ -1,6 +1,6 @@
 //
 //  ConsoleViewModel.swift
-//  
+//
 //
 //  Created by Lukas on 4/19/24.
 //
@@ -10,25 +10,24 @@ import UIKit
 
 internal final class ConsoleViewModel: Echoable {
     
-    @Published private(set) var isActivePublisher: AnyPublisher<Bool, Never>
     @Published private(set) var windowState: WindowState = .windowed
+    
     private(set) var pasteboard: Pasteboard
     
-    internal init(_ environment: Environment, publisher: AnyPublisher<Bool, Never>) {
+    internal init(_ environment: Environment) {
         pasteboard = switch environment {
         case .production:
             SystemPasteboard.shared
         case .test:
             MockPasteboard.shared
         }
-        isActivePublisher = publisher
     }
 }
 
 // MARK: - Methods
 extension ConsoleViewModel {
     
-    var fullLogs: String {
+    internal var fullLogs: String {
         Buffer.shared.fullLogs
     }
 }
@@ -86,11 +85,6 @@ extension ConsoleViewModel {
 
 // MARK: - Enums
 extension ConsoleViewModel {
-    
-    internal enum Environment {
-        case production
-        case test
-    }
     
     internal enum WindowState {
         case fullscreen

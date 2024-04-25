@@ -29,7 +29,7 @@
                         <imageReference key="image" image="terminal" catalog="system" symbolScale="default"/>
                     </state>
                     <buttonConfiguration key="configuration" style="plain">
-                        <imageReference key="image" image="terminal.fill" catalog="system" symbolScale="large"/>
+                        <imageReference key="image" image="apple.terminal.fill" catalog="system" symbolScale="large"/>
                     </buttonConfiguration>
                 </button>
             </subviews>
@@ -46,8 +46,8 @@
         </view>
     </objects>
     <resources>
+        <image name="apple.terminal.fill" catalog="system" width="128" height="93"/>
         <image name="terminal" catalog="system" width="128" height="93"/>
-        <image name="terminal.fill" catalog="system" width="128" height="93"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

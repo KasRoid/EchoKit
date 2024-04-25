@@ -14,12 +14,11 @@ internal final class ConsoleWindow: UIWindow {
     private let interactiveView = UIView()
     private let bubbleView = BubbleView()
     
-    init(windowScene: UIWindowScene, publisher: AnyPublisher<Bool, Never>) {
-        viewModel = ConsoleViewModel(.production, publisher: publisher)
+    internal init(windowScene: UIWindowScene, viewModel: ConsoleViewModel) {
+        self.viewModel = viewModel
         super.init(windowScene: windowScene)
         let rootViewController = ConsoleViewController(viewModel: viewModel, interactiveView: interactiveView, bubbleView: bubbleView)
         self.rootViewController = rootViewController
-        bubbleView.prepare(parentView: rootViewController.view)
         setupUI()
     }
     
