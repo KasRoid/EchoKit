@@ -144,6 +144,8 @@ extension ConsoleViewController: ActionProvider {
                     self?.viewModel.send(.quit)
                 case .window(let action):
                     self?.viewModel.send(.adjustWindow(action))
+                case .filter:
+                    self?.viewModel.send(.filter)
                 }
             }
             .store(in: &cancellables)

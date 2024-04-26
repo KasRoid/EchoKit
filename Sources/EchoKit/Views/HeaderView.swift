@@ -12,12 +12,13 @@ internal final class HeaderView: UIView, Echoable {
     
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var windowControls: WindowControls!
+    @IBOutlet private weak var filterButton: UIButton!
     @IBOutlet private weak var actionButton: UIButton!
     
     private var viewModel: HeaderViewModel!
     private var cancellables = Set<AnyCancellable>()
     
-    init(viewModel: HeaderViewModel) {
+    internal init(viewModel: HeaderViewModel) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupWithXib()
@@ -49,6 +50,10 @@ extension HeaderView {
             .sink { [weak self] in self?.viewModel.send(.adjustWindow($0)) }
             .store(in: &cancellables)
         
+        filterButton.publisher(for: .touchUpInside)
+            .sink { [weak self] _ in self?.viewModel.send(.toggleFilter) }
+            .store(in: &cancellables)
+        
         actionButton.publisher(for: .touchUpInside)
             .sink { [weak self] _ in self?.viewModel.send(.showActions) }
             .store(in: &cancellables)
@@ -65,5 +70,12 @@ extension HeaderView {
         actionButton.imageView?.heightAnchor.constraint(equalToConstant: 18).isActive = true
         actionButton.imageView?.centerXAnchor.constraint(equalTo: actionButton.centerXAnchor).isActive = true
         actionButton.imageView?.centerYAnchor.constraint(equalTo: actionButton.centerYAnchor).isActive = true
+        
+        filterButton.imageView?.contentMode = .scaleAspectFill
+        filterButton.imageView?.translatesAutoresizingMaskIntoConstraints = false
+        filterButton.imageView?.widthAnchor.constraint(equalToConstant: 18).isActive = true
+        filterButton.imageView?.heightAnchor.constraint(equalToConstant: 18).isActive = true
+        filterButton.imageView?.centerXAnchor.constraint(equalTo: filterButton.centerXAnchor).isActive = true
+        filterButton.imageView?.centerYAnchor.constraint(equalTo: filterButton.centerYAnchor).isActive = true
     }
 }

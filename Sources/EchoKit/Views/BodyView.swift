@@ -11,13 +11,14 @@ import UIKit
 internal final class BodyView: UIView {
     
     @IBOutlet private weak var consoleTableView: UITableView!
-    @IBOutlet private weak var detailTableView: UITableView!
+    @IBOutlet private weak var auxiliaryTableView: UITableView!
     
     private var viewModel: BodyViewModel!
     private var consoleDataSource: ConsoleDataSource?
     private var detailDataSource: DetailDataSource?
+    private var levelFilterDataSource: FilterDataSource<Level>?
     private var consoleCancellables = Set<AnyCancellable>()
-    private var detailCancellables = Set<AnyCancellable>()
+    private var auxiliaryCancellables = Set<AnyCancellable>()
     
     internal init(viewModel: BodyViewModel) {
         self.viewModel = viewModel
@@ -58,12 +59,28 @@ extension BodyView {
         
         viewModel.$selectedLog
             .sink { [weak self] in
-                self?.detailTableView.isHidden = $0 == nil
+                self?.auxiliaryTableView.isHidden = $0 == nil
                 if let log = $0 {
                     self?.setupDetailDataSource(with: log)
                 } else {
                     self?.detailDataSource = nil
-                    self?.detailCancellables.removeAll()
+                    self?.auxiliaryCancellables.removeAll()
+                }
+            }
+            .store(in: &consoleCancellables)
+        
+        viewModel.$isFilterable
+            .sink { [weak self] in
+                guard let self else { return }
+                auxiliaryTableView.isHidden = !$0
+                if $0 {
+                    let filter = Level.allCases
+                    let selected = viewModel.filteredLevels
+                    setupLevelFilterDataSource(filters: filter, selected: selected)
+                } else {
+                    levelFilterDataSource?.finish()
+                    levelFilterDataSource = nil
+                    auxiliaryCancellables.removeAll()
                 }
             }
             .store(in: &consoleCancellables)
@@ -88,7 +105,7 @@ extension BodyView {
     
     private func setupUI() {
         consoleTableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 0)
-        detailTableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 0)
+        auxiliaryTableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 0)
         consoleDataSource = .init(tableView: consoleTableView)
     }
     
@@ -98,12 +115,12 @@ extension BodyView {
     }
     
     private func setupDetailDataSource(with log: Log) {
-        detailDataSource = .init(tableView: detailTableView)
+        detailDataSource = .init(tableView: auxiliaryTableView)
         detailDataSource?.update(log: log)
         
         detailDataSource?.tap
             .sink { [weak self] in self?.viewModel.send(.quit) }
-            .store(in: &detailCancellables)
+            .store(in: &auxiliaryCancellables)
         
         detailDataSource?.interaction
             .sink { [weak self] text, interaction in
@@ -112,10 +129,19 @@ extension BodyView {
                     self?.viewModel.send(.copyText(text: text))
                 }
             }
-            .store(in: &detailCancellables)
+            .store(in: &auxiliaryCancellables)
         
-        detailTableView.gesturePublisher(.tap)
+        auxiliaryTableView.gesturePublisher(.tap)
             .sink { [weak self] _ in self?.viewModel.send(.quit) }
-            .store(in: &detailCancellables)
+            .store(in: &auxiliaryCancellables)
+    }
+    
+    private func setupLevelFilterDataSource(filters: [Level], selected: [Level]) {
+        levelFilterDataSource = .init(tableView: auxiliaryTableView, filters: filters)
+        let prompt = Prompt(title: "Select Filter", description: "[Tap to select]")
+        levelFilterDataSource?.update(prompt: prompt, selected: selected)
+        levelFilterDataSource?.result
+            .sink { [weak self] in self?.viewModel.send(.setLevelFilter($0)) }
+            .store(in: &auxiliaryCancellables)
     }
 }

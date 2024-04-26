@@ -11,6 +11,8 @@ internal final class BodyViewModel {
     
     @Published private(set) var logs: [Log] = []
     @Published private(set) var selectedLog: Log?
+    @Published private(set) var isFilterable = false
+    private(set) var filteredLevels: [Level] = Level.allCases
     
     private let _isQuitable = PassthroughSubject<Bool, Never>()
     internal var isQuitable: AnyPublisher<Bool, Never> { _isQuitable.eraseToAnyPublisher() }
@@ -47,6 +49,8 @@ extension BodyViewModel {
         case copyText(text: String)
         case showDetail(Log)
         case quit
+        case toggleFilter
+        case setLevelFilter([Level])
     }
     
     internal func send(_ action: Action) {
@@ -59,8 +63,13 @@ extension BodyViewModel {
             selectedLog = log
             _isQuitable.send(true)
         case .quit:
+            isFilterable = false
             selectedLog = nil
             _isQuitable.send(false)
+        case .toggleFilter:
+            isFilterable.toggle()
+        case .setLevelFilter(let filters):
+            filteredLevels = filters
         }
     }
 }

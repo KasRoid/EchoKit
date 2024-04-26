@@ -32,7 +32,7 @@ internal final class DetailDataSource: UITableViewDiffableDataSource<Section, St
     
     internal func update(log: Log) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, String>()
-        snapshot.appendSections([.main])
+        snapshot.appendSections([.content])
         snapshot.appendItems([log.text])
         apply(snapshot, animatingDifferences: false)
     }

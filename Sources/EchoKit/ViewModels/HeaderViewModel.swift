@@ -34,6 +34,7 @@ extension HeaderViewModel {
         case adjustWindow(WindowControls.Action)
         case showActions
         case changeActions(isQuitable: Bool)
+        case toggleFilter
     }
     
     internal func send(_ action: Action) {
@@ -44,6 +45,8 @@ extension HeaderViewModel {
             _result.send(.actions(actions: moreActions, handler: handleAction))
         case .changeActions(let isQuitable):
             moreActions = isQuitable ? MoreAction.quitabletActions : MoreAction.defaultActions
+        case .toggleFilter:
+            _result.send(.filter)
         }
     }
 }
@@ -55,6 +58,7 @@ extension HeaderViewModel {
         case actions(actions: [MoreAction], handler: (MoreAction) -> Void)
         case window(action: WindowControls.Action)
         case quit
+        case filter
     }
     
     private func handleAction(_ action: MoreAction) {

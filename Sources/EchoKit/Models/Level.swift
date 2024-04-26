@@ -5,7 +5,7 @@
 //  Created by Lukas on 4/19/24.
 //
 
-public enum Level {
+public enum Level: String, CaseIterable {
     case debug    // 디버그 정보: 개발 중에 발생하는 일반적인 상태 정보나 진행 상황을 나타냅니다.
     case info     // 정보 메시지: 일반적인 운영 정보를 기록, 시스템이 예상대로 작동하고 있음을 알림.
     case warning  // 경고: 잠재적인 문제를 알림, 즉시 해결이 필요하지 않지만 주의가 필요한 상황.

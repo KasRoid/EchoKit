@@ -29,6 +29,7 @@ extension ConsoleViewModel {
         case activateWindow
         case adjustWindow(WindowControls.Action)
         case quit
+        case filter
     }
     
     internal func send(_ action: Action) {
@@ -39,6 +40,8 @@ extension ConsoleViewModel {
             controlWindows(action)
         case .quit:
             bodyViewModel.send(.quit)
+        case .filter:
+            bodyViewModel.send(.toggleFilter)
         }
     }
 }
