@@ -34,10 +34,9 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E21-qZ-cDK">
-                    <rect key="frame" x="369" y="2" width="20" height="20"/>
+                    <rect key="frame" x="369" y="0.0" width="24" height="24"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="20" id="Bbc-fP-BHR"/>
-                        <constraint firstAttribute="height" constant="20" id="HjV-i9-2St"/>
+                        <constraint firstAttribute="width" secondItem="E21-qZ-cDK" secondAttribute="height" id="eo8-l6-Xmk"/>
                     </constraints>
                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -52,9 +51,11 @@
             <constraints>
                 <constraint firstItem="GQH-8z-1gJ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="C6i-p4-Hj2"/>
                 <constraint firstAttribute="bottom" secondItem="GQH-8z-1gJ" secondAttribute="bottom" id="IEB-Na-Qma"/>
+                <constraint firstAttribute="bottom" secondItem="E21-qZ-cDK" secondAttribute="bottom" id="MyH-gM-90M"/>
                 <constraint firstItem="Grb-wM-2bV" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Paz-IT-6xw"/>
-                <constraint firstAttribute="trailing" secondItem="E21-qZ-cDK" secondAttribute="trailing" constant="4" id="RMf-0b-r8r"/>
+                <constraint firstAttribute="trailing" secondItem="E21-qZ-cDK" secondAttribute="trailing" id="RMf-0b-r8r"/>
                 <constraint firstItem="Grb-wM-2bV" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="ZjJ-Uc-q6f"/>
+                <constraint firstItem="E21-qZ-cDK" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="ast-lO-dcp"/>
                 <constraint firstItem="GQH-8z-1gJ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="nTi-vg-QzA"/>
                 <constraint firstItem="E21-qZ-cDK" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="z61-lA-J9j"/>
             </constraints>

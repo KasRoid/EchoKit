@@ -21,12 +21,14 @@ internal final class HeaderView: UIView, Echoable {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupWithXib()
+        setupUI()
         bind()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupWithXib()
+        setupUI()
     }
 }
 
@@ -50,5 +52,18 @@ extension HeaderView {
         actionButton.publisher(for: .touchUpInside)
             .sink { [weak self] _ in self?.viewModel.send(.showActions) }
             .store(in: &cancellables)
+    }
+}
+
+// MARK: - UI
+extension HeaderView {
+    
+    private func setupUI() {
+        actionButton.imageView?.contentMode = .scaleAspectFill
+        actionButton.imageView?.translatesAutoresizingMaskIntoConstraints = false
+        actionButton.imageView?.widthAnchor.constraint(equalToConstant: 18).isActive = true
+        actionButton.imageView?.heightAnchor.constraint(equalToConstant: 18).isActive = true
+        actionButton.imageView?.centerXAnchor.constraint(equalTo: actionButton.centerXAnchor).isActive = true
+        actionButton.imageView?.centerYAnchor.constraint(equalTo: actionButton.centerYAnchor).isActive = true
     }
 }

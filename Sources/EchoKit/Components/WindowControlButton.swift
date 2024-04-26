@@ -24,11 +24,6 @@ internal final class WindowControlButtonView: UIView {
         super.init(coder: aDecoder)
         setupUI()
     }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        dotView.layer.cornerRadius = dotView.frame.height / 2
-    }
 }
 
 // MARK: - Methods
@@ -42,6 +37,7 @@ extension WindowControlButtonView {
     
     internal func prepare(color: UIColor) {
         dotView.backgroundColor = color
+        button.setImage(dotView.asImage, for: .normal)
     }
 }
 
@@ -51,20 +47,20 @@ extension WindowControlButtonView {
     private func setupUI() {
         backgroundColor = .clear
         addSubview(button)
-        addSubview(dotView)
         button.translatesAutoresizingMaskIntoConstraints = false
-        dotView.translatesAutoresizingMaskIntoConstraints = false
-        dotView.isUserInteractionEnabled = false
+        button.imageView?.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            dotView.widthAnchor.constraint(equalToConstant: 14),
-            dotView.heightAnchor.constraint(equalToConstant: 14),
-            dotView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            dotView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            
             button.widthAnchor.constraint(equalTo: widthAnchor),
             button.heightAnchor.constraint(equalTo: heightAnchor),
             button.centerXAnchor.constraint(equalTo: centerXAnchor),
             button.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
+        button.imageView?.widthAnchor.constraint(equalToConstant: 14).isActive = true
+        button.imageView?.heightAnchor.constraint(equalToConstant: 14).isActive = true
+        button.imageView?.centerXAnchor.constraint(equalTo: button.centerXAnchor).isActive = true
+        button.imageView?.centerYAnchor.constraint(equalTo: button.centerYAnchor).isActive = true
+        
+        dotView.frame.size = CGSize(width: 14, height: 14)
+        dotView.layer.cornerRadius = 7
     }
 }

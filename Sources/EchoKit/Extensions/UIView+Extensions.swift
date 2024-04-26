@@ -53,6 +53,13 @@ internal extension UIView {
         }
     }
     
+    var asImage: UIImage {
+        let renderer = UIGraphicsImageRenderer(bounds: bounds)
+        return renderer.image { rendererContext in
+            layer.render(in: rendererContext.cgContext)
+        }
+    }
+    
     static var screenWidth: CGFloat {
         UIScreen.main.bounds.size.width
     }
