@@ -12,23 +12,13 @@ internal final class ConsoleViewModel: Echoable {
     
     @Published private(set) var windowState: WindowState = .windowed
     
-    private(set) var pasteboard: Pasteboard
+    internal let headerViewModel = HeaderViewModel(.production)
+    internal let bodyViewModel = BodyViewModel(.production)
+    internal let footerViewModel = FooterViewModel()
+    private var cancellables = Set<AnyCancellable>()
     
-    internal init(_ environment: Environment) {
-        pasteboard = switch environment {
-        case .production:
-            SystemPasteboard.shared
-        case .test:
-            MockPasteboard.shared
-        }
-    }
-}
-
-// MARK: - Methods
-extension ConsoleViewModel {
-    
-    internal var fullLogs: String {
-        Buffer.shared.fullLogs
+    internal init() {
+        bind()
     }
 }
 
@@ -38,11 +28,7 @@ extension ConsoleViewModel {
     internal enum Action {
         case activateWindow
         case adjustWindow(WindowControls.Action)
-        case divider
-        case clear
-        case copy
-        case showBuildInfo
-        case showSystemInfo
+        case quit
     }
     
     internal func send(_ action: Action) {
@@ -51,18 +37,19 @@ extension ConsoleViewModel {
             windowState = .windowed
         case .adjustWindow(let action):
             controlWindows(action)
-        case .divider:
-            let log = Log(text: "==========", level: .info)
-            Buffer.shared.send(.append(log: log))
-        case .clear:
-            Buffer.shared.send(.clear)
-        case .copy:
-            pasteboard.string = fullLogs
-        case .showBuildInfo:
-            Console.echo(Project.info)
-        case .showSystemInfo:
-            Console.echo(System.info)
+        case .quit:
+            bodyViewModel.send(.quit)
         }
+    }
+}
+
+// MARK: - Bindings
+extension ConsoleViewModel {
+    
+    private func bind() {
+        bodyViewModel.isQuitable
+            .sink { [weak self] in self?.headerViewModel.send(.changeActions(isQuitable: $0)) }
+            .store(in: &cancellables)
     }
 }
 

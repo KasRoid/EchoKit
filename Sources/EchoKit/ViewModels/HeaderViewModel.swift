@@ -10,16 +10,20 @@ import UIKit
 
 internal final class HeaderViewModel {
     
-    private let subject = PassthroughSubject<Action, Never>()
-    internal var publisher: AnyPublisher<Action, Never> { subject.eraseToAnyPublisher() }
+    private let _result = PassthroughSubject<Result, Never>()
+    internal var result: AnyPublisher<Result, Never> { _result.eraseToAnyPublisher() }
     
-    private(set) var moreActions: [MoreAction] = [.systemInfo, .buidInfo, .share, .divider, .copy, .clear]
-    private let isQuitablePublisher: AnyPublisher<Bool, Never>
+    private(set) var moreActions = MoreAction.defaultActions
+    private var pasteboard: Pasteboard
     private var cancellable: AnyCancellable?
     
-    internal init(isQuitablePublisher: AnyPublisher<Bool, Never>) {
-        self.isQuitablePublisher = isQuitablePublisher
-        bind()
+    internal init(_ environment: Environment) {
+        pasteboard = switch environment {
+        case .production:
+            SystemPasteboard.shared
+        case .test:
+            MockPasteboard.shared
+        }
     }
 }
 
@@ -29,23 +33,46 @@ extension HeaderViewModel {
     internal enum Action: Equatable {
         case adjustWindow(WindowControls.Action)
         case showActions
+        case changeActions(isQuitable: Bool)
     }
     
     internal func send(_ action: Action) {
-        subject.send(action)
+        switch action {
+        case .adjustWindow(let windowAction):
+            _result.send(.window(action: windowAction))
+        case .showActions:
+            _result.send(.actions(actions: moreActions, handler: handleAction))
+        case .changeActions(let isQuitable):
+            moreActions = isQuitable ? MoreAction.quitabletActions : MoreAction.defaultActions
+        }
     }
 }
 
-// MARK: - Bindings
+// MARK: - Result
 extension HeaderViewModel {
     
-    private func bind() {
-        cancellable = isQuitablePublisher
-            .sink { [weak self] in
-                self?.moreActions = $0
-                ? [.quit]
-                : [.systemInfo, .buidInfo, .share, .divider, .copy, .clear]
-            }
+    internal enum Result {
+        case actions(actions: [MoreAction], handler: (MoreAction) -> Void)
+        case window(action: WindowControls.Action)
+        case quit
+    }
+    
+    private func handleAction(_ action: MoreAction) {
+        switch action {
+        case .buidInfo:
+            Console.echo(Project.info)
+        case .systemInfo:
+            Console.echo(System.info)
+        case .divider:
+            let log = Log(text: "==========", level: .info)
+            Buffer.shared.send(.append(log: log))
+        case .clear:
+            Buffer.shared.send(.clear)
+        case .copy:
+            pasteboard.string = Buffer.shared.fullLogs
+        case .quit:
+            _result.send(.quit)
+        }
     }
 }
 
@@ -55,10 +82,12 @@ extension HeaderViewModel {
     internal enum MoreAction: String, CaseIterable {
         case systemInfo = "System Info"
         case buidInfo = "Build Info"
-        case share = "Share"
         case divider = "Divider"
         case copy = "Copy"
         case clear = "Clear"
         case quit = "Quit"
+        
+        static let defaultActions: [MoreAction] = [.systemInfo, .buidInfo, .divider, .copy, .clear]
+        static let quitabletActions: [MoreAction] = [.quit]
     }
 }

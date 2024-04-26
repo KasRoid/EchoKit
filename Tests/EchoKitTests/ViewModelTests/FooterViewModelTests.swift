@@ -23,6 +23,7 @@ final class FooterViewModelTests: XCTestCase {
     }
     
     func testLogCountPublisher() {
+        Buffer.shared.send(.clear)
         var receivedValues: [Int] = []
         sut.logCount
             .sink { receivedValues.append($0) }

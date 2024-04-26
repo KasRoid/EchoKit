@@ -11,31 +11,21 @@ internal final class BodyViewModel {
     
     @Published private(set) var logs: [Log] = []
     @Published private(set) var selectedLog: Log?
+    
+    private let _isQuitable = PassthroughSubject<Bool, Never>()
+    internal var isQuitable: AnyPublisher<Bool, Never> { _isQuitable.eraseToAnyPublisher() }
+    
     private(set) var pasteboard: Pasteboard
-    private let quitPublisher: AnyPublisher<Void, Never>
     private var cancellables = Set<AnyCancellable>()
     
-    internal init(environment: Environment, quitPublisher: AnyPublisher<Void, Never>) {
+    internal init(_ environment: Environment) {
         self.pasteboard = switch environment {
         case .production:
             SystemPasteboard.shared
         case .test:
             MockPasteboard.shared
         }
-        self.quitPublisher = quitPublisher
         bind()
-    }
-}
-
-// MARK: - Methods
-extension BodyViewModel {
-    
-    internal var logSelected: AnyPublisher<Void, Never> {
-        $selectedLog
-            .dropFirst()
-            .filter { $0 != nil }
-            .map { _ in Void() }
-            .eraseToAnyPublisher()
     }
 }
 
@@ -46,10 +36,6 @@ extension BodyViewModel {
         Buffer.shared.$logs
             .sink { [weak self] in self?.logs = $0 }
             .store(in: &cancellables)
-        
-        quitPublisher
-            .sink { [weak self] in self?.selectedLog = nil }
-            .store(in: &cancellables)
     }
 }
 
@@ -57,16 +43,24 @@ extension BodyViewModel {
 extension BodyViewModel {
     
     internal enum Action {
-        case copy(Log)
+        case copyLog(Log)
+        case copyText(text: String)
         case showDetail(Log)
+        case quit
     }
     
     internal func send(_ action: Action) {
         switch action {
-        case .copy(let log):
+        case .copyLog(let log):
             pasteboard.string = "\(log.date.HHmmss) \(log.text)"
+        case .copyText(let text):
+            pasteboard.string = text
         case .showDetail(let log):
             selectedLog = log
+            _isQuitable.send(true)
+        case .quit:
+            selectedLog = nil
+            _isQuitable.send(false)
         }
     }
 }

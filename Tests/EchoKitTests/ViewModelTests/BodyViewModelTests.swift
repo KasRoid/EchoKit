@@ -17,8 +17,7 @@ final class BodyViewModelTests: XCTestCase {
     private var cancellables = Set<AnyCancellable>()
 
     override func setUpWithError() throws {
-        let pasteBoard = MockPasteboard.shared
-        sut = BodyViewModel(environment: .test, quitPublisher: publisher)
+        sut = BodyViewModel(.test)
     }
 
     override func tearDownWithError() throws {
@@ -26,18 +25,18 @@ final class BodyViewModelTests: XCTestCase {
     }
     
     func testInitializer() {
-        let mockViewModel = BodyViewModel(environment: .test, quitPublisher: publisher)
+        let mockViewModel = BodyViewModel(.test)
         let mockPasteboard = mockViewModel.pasteboard as? MockPasteboard
         XCTAssertTrue(mockPasteboard != nil)
         
-        let productionViewModel = BodyViewModel(environment: .production, quitPublisher: publisher)
+        let productionViewModel = BodyViewModel(.production)
         let systemPasteboard = productionViewModel.pasteboard as? SystemPasteboard
         XCTAssertTrue(systemPasteboard != nil)
     }
     
     func testCopyLog() {
         let log = Log(text: "Some Log", level: .info)
-        sut.send(.copy(log))
+        sut.send(.copyLog(log))
         let expectedText = "\(log.date.HHmmss) \(log.text)"
         XCTAssertEqual(expectedText, sut.pasteboard.string)
     }
@@ -50,12 +49,13 @@ final class BodyViewModelTests: XCTestCase {
     
     func testLogSelectedPublisher() {
         let log = Log(text: "Some Log", level: .info)
-        var isLogSelected = false
+        var isQuitable = false
         
-        sut.logSelected
-            .sink { isLogSelected = true }
+        sut.isQuitable
+            .sink { isQuitable = $0 }
             .store(in: &cancellables)
+        
         sut.send(.showDetail(log))
-        XCTAssertTrue(isLogSelected)
+        XCTAssertTrue(isQuitable)
     }
 }

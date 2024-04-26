@@ -16,7 +16,8 @@ internal final class BodyView: UIView {
     private var viewModel: BodyViewModel!
     private var consoleDataSource: ConsoleDataSource?
     private var detailDataSource: DetailDataSource?
-    private var cancellables = Set<AnyCancellable>()
+    private var consoleCancellables = Set<AnyCancellable>()
+    private var detailCancellables = Set<AnyCancellable>()
     
     internal init(viewModel: BodyViewModel) {
         self.viewModel = viewModel
@@ -53,7 +54,7 @@ extension BodyView {
                 self?.consoleDataSource?.update(logs: $0)
                 self?.scrollTo(log: $0.last)
             }
-            .store(in: &cancellables)
+            .store(in: &consoleCancellables)
         
         viewModel.$selectedLog
             .sink { [weak self] in
@@ -62,22 +63,23 @@ extension BodyView {
                     self?.setupDetailDataSource(with: log)
                 } else {
                     self?.detailDataSource = nil
+                    self?.detailCancellables.removeAll()
                 }
             }
-            .store(in: &cancellables)
+            .store(in: &consoleCancellables)
         
         consoleDataSource?.tap
             .sink { [weak self] in self?.viewModel.send(.showDetail($0)) }
-            .store(in: &cancellables)
+            .store(in: &consoleCancellables)
         
         consoleDataSource?.interaction
             .sink { [weak self] log, interaction in
                 switch interaction {
                 case .copy:
-                    self?.viewModel.send(.copy(log))
+                    self?.viewModel.send(.copyLog(log))
                 }
             }
-            .store(in: &cancellables)
+            .store(in: &consoleCancellables)
     }
 }
 
@@ -86,6 +88,7 @@ extension BodyView {
     
     private func setupUI() {
         consoleTableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 0)
+        detailTableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 0)
         consoleDataSource = .init(tableView: consoleTableView)
     }
     
@@ -97,5 +100,22 @@ extension BodyView {
     private func setupDetailDataSource(with log: Log) {
         detailDataSource = .init(tableView: detailTableView)
         detailDataSource?.update(log: log)
+        
+        detailDataSource?.tap
+            .sink { [weak self] in self?.viewModel.send(.quit) }
+            .store(in: &detailCancellables)
+        
+        detailDataSource?.interaction
+            .sink { [weak self] text, interaction in
+                switch interaction {
+                case .copy:
+                    self?.viewModel.send(.copyText(text: text))
+                }
+            }
+            .store(in: &detailCancellables)
+        
+        detailTableView.gesturePublisher(.tap)
+            .sink { [weak self] _ in self?.viewModel.send(.quit) }
+            .store(in: &detailCancellables)
     }
 }

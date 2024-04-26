@@ -14,8 +14,7 @@ internal final class ConsoleViewController: UIViewController, Echoable {
     private let bubbleView: BubbleView
     private let consoleView = ConsoleView()
     
-    @Published private(set) var isPresenting = false
-    @Published private(set) var isQuitable = false
+    @Published private var isPresenting = false
     
     private let viewModel: ConsoleViewModel
     private var cancellables = Set<AnyCancellable>()
@@ -45,26 +44,9 @@ internal final class ConsoleViewController: UIViewController, Echoable {
 // MARK: - Private Functions
 extension ConsoleViewController {
     
-    private func handleMoreActions(actions: [HeaderViewModel.MoreAction]) {
+    private func showActionSheet(actions: [HeaderViewModel.MoreAction], handler: @escaping (HeaderViewModel.MoreAction) -> Void) {
         isPresenting = true
-        showActionSheet(actions: actions) { [weak self] in
-            switch $0 {
-            case .share:
-                self?.showActivity()
-            case .buidInfo:
-                self?.viewModel.send(.showBuildInfo)
-            case .systemInfo:
-                self?.viewModel.send(.showSystemInfo)
-            case .divider:
-                self?.viewModel.send(.divider)
-            case .clear:
-                self?.viewModel.send(.clear)
-            case .copy:
-                self?.viewModel.send(.copy)
-            case .quit:
-                self?.isQuitable = false
-            }
-        } completion: { [weak self] in
+        showActionSheet(actions: actions, handler: handler) { [weak self] in
             self?.isPresenting = false
         }
     }
@@ -151,45 +133,29 @@ extension ConsoleViewController: ActionProvider {
     }
     
     private func setupHeaderView() {
-        let isQuitablePublisher = $isQuitable
-            .dropFirst()
-            .eraseToAnyPublisher()
-        let headerViewModel = HeaderViewModel(isQuitablePublisher: isQuitablePublisher)
+        let headerViewModel = viewModel.headerViewModel
         consoleView.setupHeaderView(viewModel: headerViewModel)
-        headerViewModel.publisher
+        headerViewModel.result
             .sink { [weak self] in
                 switch $0 {
-                case .adjustWindow(let action):
+                case .actions(let actions, let handler):
+                    self?.showActionSheet(actions: actions, handler: handler)
+                case .quit:
+                    self?.viewModel.send(.quit)
+                case .window(let action):
                     self?.viewModel.send(.adjustWindow(action))
-                case .showActions:
-                    self?.handleMoreActions(actions: headerViewModel.moreActions) }
+                }
             }
             .store(in: &cancellables)
     }
     
     private func setupBodyView() {
-        let quitPublisher = $isQuitable
-            .dropFirst()
-            .filter { !$0 }
-            .map { _ in Void() }
-            .eraseToAnyPublisher()
-        let bodyViewModel = BodyViewModel(environment: .production, quitPublisher: quitPublisher)
-        bodyViewModel.logSelected
-            .sink { [weak self] in self?.isQuitable = true }
-            .store(in: &cancellables)
+        let bodyViewModel = viewModel.bodyViewModel
         consoleView.setupBodyView(viewModel: bodyViewModel)
     }
     
     private func setupFooterView() {
-        let footerViewModel = FooterViewModel()
+        let footerViewModel = viewModel.footerViewModel
         consoleView.setupFooterView(viewModel: footerViewModel)
-    }
-    
-    private func showActivity() {
-        isPresenting = true
-        let items = [viewModel.fullLogs]
-        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
-        controller.completionWithItemsHandler = { [weak self] _, _, _, _ in self?.isPresenting = false }
-        present(controller, animated: true)
     }
 }

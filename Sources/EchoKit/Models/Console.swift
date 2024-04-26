@@ -36,7 +36,7 @@ extension Console {
     private static func setupConsole() {
         let scenes = UIApplication.shared.connectedScenes
         guard let windowScene = scenes.first as? UIWindowScene else { return }
-        let viewModel = ConsoleViewModel(.production)
+        let viewModel = ConsoleViewModel()
         let window = ConsoleWindow(windowScene: windowScene, viewModel: viewModel)
         window.frame = UIScreen.main.bounds
         window.windowLevel = .alert + 1

@@ -12,34 +12,21 @@ import XCTest
 final class HeaderViewModelTests: XCTestCase {
     
     private var sut: HeaderViewModel!
-    private let subject = PassthroughSubject<Bool, Never>()
     private var cancellables = Set<AnyCancellable>()
 
     override func setUpWithError() throws {
-        let publisher = subject.eraseToAnyPublisher()
-        sut = HeaderViewModel(isQuitablePublisher: publisher)
+        sut = HeaderViewModel(.test)
     }
 
     override func tearDownWithError() throws {
         sut = nil
     }
-    
-    func testPublisher() {
-        let sendingAction: HeaderViewModel.Action = .adjustWindow(.close)
-        var receivedAction: HeaderViewModel.Action?
-        
-        sut.publisher
-            .sink { receivedAction = $0 }
-            .store(in: &cancellables)
-        sut.send(sendingAction)
-        XCTAssertEqual(sendingAction, receivedAction)
-    }
-    
+
     func testMoreActionsList() {
-        subject.send(false)
-        XCTAssertEqual(sut.moreActions, [.systemInfo, .buidInfo, .share, .divider, .copy, .clear])
-        
-        subject.send(true)
+        sut.send(.changeActions(isQuitable: true))
         XCTAssertEqual(sut.moreActions, [.quit])
+        
+        sut.send(.changeActions(isQuitable: false))
+        XCTAssertEqual(sut.moreActions, [.systemInfo, .buidInfo, .divider, .copy, .clear])
     }
 }
