@@ -19,6 +19,7 @@ internal final class BodyView: UIView {
     private var levelFilterDataSource: FilterDataSource<Level>?
     private var consoleCancellables = Set<AnyCancellable>()
     private var auxiliaryCancellables = Set<AnyCancellable>()
+    private var auxiliaryTableViewTapGesture: UITapGestureRecognizer?
     
     internal init(viewModel: BodyViewModel) {
         self.viewModel = viewModel
@@ -64,7 +65,7 @@ extension BodyView {
                     self?.setupDetailDataSource(with: log)
                 } else {
                     self?.detailDataSource = nil
-                    self?.auxiliaryCancellables.removeAll()
+                    self?.resetAuxiliaryTableView()
                 }
             }
             .store(in: &consoleCancellables)
@@ -80,7 +81,7 @@ extension BodyView {
                 } else {
                     levelFilterDataSource?.finish()
                     levelFilterDataSource = nil
-                    auxiliaryCancellables.removeAll()
+                    resetAuxiliaryTableView()
                 }
             }
             .store(in: &consoleCancellables)
@@ -131,7 +132,9 @@ extension BodyView {
             }
             .store(in: &auxiliaryCancellables)
         
-        auxiliaryTableView.gesturePublisher(.tap)
+        let gesture = UITapGestureRecognizer()
+        auxiliaryTableViewTapGesture = gesture
+        auxiliaryTableView.gesturePublisher(.custom(gesture))
             .sink { [weak self] _ in self?.viewModel.send(.quit) }
             .store(in: &auxiliaryCancellables)
     }
@@ -143,5 +146,12 @@ extension BodyView {
         levelFilterDataSource?.result
             .sink { [weak self] in self?.viewModel.send(.setLevelFilter($0)) }
             .store(in: &auxiliaryCancellables)
+    }
+    
+    private func resetAuxiliaryTableView() {
+        if let auxiliaryTableViewTapGesture {
+            auxiliaryTableView.removeGestureRecognizer(auxiliaryTableViewTapGesture)
+        }
+        auxiliaryCancellables.removeAll()
     }
 }

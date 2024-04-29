@@ -15,21 +15,24 @@ internal enum GestureType {
     case pinch
     case swipe
     case edge
+    case custom(UIGestureRecognizer)
     
     func getType() -> UIGestureRecognizer {
         switch self {
         case.tap:
-            return UITapGestureRecognizer()
+            UITapGestureRecognizer()
         case.longPress:
-            return UILongPressGestureRecognizer()
+            UILongPressGestureRecognizer()
         case.pan:
-            return UIPanGestureRecognizer()
+            UIPanGestureRecognizer()
         case.pinch:
-            return UIPinchGestureRecognizer()
+            UIPinchGestureRecognizer()
         case.swipe:
-            return UISwipeGestureRecognizer()
+            UISwipeGestureRecognizer()
         case.edge:
-            return UIScreenEdgePanGestureRecognizer()
+            UIScreenEdgePanGestureRecognizer()
+        case .custom(let gesture):
+            gesture
         }
     }
 }
