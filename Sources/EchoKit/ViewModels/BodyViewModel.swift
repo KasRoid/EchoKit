@@ -36,7 +36,10 @@ extension BodyViewModel {
     
     private func bind() {
         Buffer.shared.$logs
-            .sink { [weak self] in self?.logs = $0 }
+            .sink { [weak self] in
+                guard let self else { return }
+                logs = $0.filter { self.filteredLevels.contains($0.level) }
+            }
             .store(in: &cancellables)
     }
 }
@@ -72,6 +75,7 @@ extension BodyViewModel {
             isFilterable.toggle()
         case .setLevelFilter(let filters):
             filteredLevels = filters
+            logs = Buffer.shared.logs.filter { filters.contains($0.level) }
         }
     }
 }
