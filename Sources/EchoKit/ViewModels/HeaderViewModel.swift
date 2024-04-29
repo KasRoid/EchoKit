@@ -13,6 +13,8 @@ internal final class HeaderViewModel {
     private let _result = PassthroughSubject<Result, Never>()
     internal var result: AnyPublisher<Result, Never> { _result.eraseToAnyPublisher() }
     
+    @Published internal var isFilterEnabled = true
+    
     private(set) var moreActions = MoreAction.defaultActions
     private var pasteboard: Pasteboard
     private var cancellable: AnyCancellable?
@@ -35,6 +37,7 @@ extension HeaderViewModel {
         case showActions
         case changeActions(isQuitable: Bool)
         case toggleFilter
+        case enableFilter(isEnabled: Bool)
     }
     
     internal func send(_ action: Action) {
@@ -47,6 +50,8 @@ extension HeaderViewModel {
             moreActions = isQuitable ? MoreAction.quitabletActions : MoreAction.defaultActions
         case .toggleFilter:
             _result.send(.filter)
+        case .enableFilter(let isEnabled):
+            isFilterEnabled = isEnabled
         }
     }
 }

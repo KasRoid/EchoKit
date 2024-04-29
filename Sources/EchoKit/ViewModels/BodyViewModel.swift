@@ -14,9 +14,9 @@ internal final class BodyViewModel {
     @Published private(set) var isFilterable = false
     private(set) var filteredLevels: [Level] = Level.allCases
     
-    private let _isQuitable = PassthroughSubject<Bool, Never>()
-    internal var isQuitable: AnyPublisher<Bool, Never> { _isQuitable.eraseToAnyPublisher() }
-    
+    private let _result = PassthroughSubject<Result, Never>()
+    internal var result: AnyPublisher<Result, Never> { _result.eraseToAnyPublisher() }
+
     private(set) var pasteboard: Pasteboard
     private var cancellables = Set<AnyCancellable>()
     
@@ -61,15 +61,26 @@ extension BodyViewModel {
             pasteboard.string = text
         case .showDetail(let log):
             selectedLog = log
-            _isQuitable.send(true)
+            _result.send(.isQuitable(true))
+            _result.send(.isFilterable(false))
         case .quit:
             isFilterable = false
             selectedLog = nil
-            _isQuitable.send(false)
+            _result.send(.isQuitable(false))
+            _result.send(.isFilterable(true))
         case .toggleFilter:
             isFilterable.toggle()
         case .setLevelFilter(let filters):
             filteredLevels = filters
         }
+    }
+}
+
+// MARK: - Enums
+extension BodyViewModel {
+    
+    internal enum Result {
+        case isQuitable(Bool)
+        case isFilterable(Bool)
     }
 }

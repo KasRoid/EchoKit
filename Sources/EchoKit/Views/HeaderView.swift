@@ -8,7 +8,7 @@
 import Combine
 import UIKit
 
-internal final class HeaderView: UIView, Echoable {
+internal final class HeaderView: UIView {
     
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var windowControls: WindowControls!
@@ -56,6 +56,10 @@ extension HeaderView {
         
         actionButton.publisher(for: .touchUpInside)
             .sink { [weak self] _ in self?.viewModel.send(.showActions) }
+            .store(in: &cancellables)
+        
+        viewModel.$isFilterEnabled
+            .sink { [weak self] in self?.filterButton.isEnabled = $0 }
             .store(in: &cancellables)
     }
 }

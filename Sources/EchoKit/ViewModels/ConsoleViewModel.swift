@@ -50,8 +50,15 @@ extension ConsoleViewModel {
 extension ConsoleViewModel {
     
     private func bind() {
-        bodyViewModel.isQuitable
-            .sink { [weak self] in self?.headerViewModel.send(.changeActions(isQuitable: $0)) }
+        bodyViewModel.result
+            .sink { [weak self] in
+                switch $0 {
+                case .isFilterable(let isFilterable):
+                    self?.headerViewModel.send(.enableFilter(isEnabled: isFilterable))
+                case .isQuitable(let isQuitable):
+                    self?.headerViewModel.send(.changeActions(isQuitable: isQuitable))
+                }
+            }
             .store(in: &cancellables)
     }
 }
