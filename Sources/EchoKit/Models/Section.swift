@@ -8,7 +8,8 @@
 import Foundation
 
 enum Section {
-    case prompt
-    case content
     case action
+    case content
+    case metadata
+    case prompt
 }

@@ -8,8 +8,9 @@
 import Combine
 import UIKit
 
-internal final class DetailDataSource: UITableViewDiffableDataSource<Section, String> {
+internal final class DetailDataSource: UITableViewDiffableDataSource<Section, AnyHashable> {
     
+    internal typealias ConsoleCell = ConsoleTextTableViewCell
     internal typealias DetailCell = DetailTableViewCell
     
     private weak var tableView: UITableView?
@@ -21,19 +22,30 @@ internal final class DetailDataSource: UITableViewDiffableDataSource<Section, St
     
     internal init(tableView: UITableView) {
         self.tableView = tableView
-        super.init(tableView: tableView) { tableView, indexPath, text in
-            let cell = tableView.dequeueReusableCell(withIdentifier: DetailCell.identifier, for: indexPath) as? DetailCell
-            cell?.prepare(text: text)
-            return cell
+        super.init(tableView: tableView) { tableView, indexPath, item in
+            if let item = item as? Metadata {
+                let cell = tableView.dequeueReusableCell(withIdentifier: ConsoleCell.identifier, for: indexPath) as? ConsoleCell
+                cell?.prepare(metadata: item)
+                return cell
+            }
+            if let item = item as? String {
+                let cell = tableView.dequeueReusableCell(withIdentifier: DetailCell.identifier, for: indexPath) as? DetailCell
+                cell?.prepare(text: item)
+                return cell
+            }
+            return UITableViewCell()
         }
+        tableView.register(ConsoleCell.identifier.nib(bundle: .module), forCellReuseIdentifier: ConsoleCell.identifier)
         tableView.register(DetailCell.identifier.nib(bundle: .module), forCellReuseIdentifier: DetailCell.identifier)
         tableView.delegate = self
     }
     
     internal func update(log: Log) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, String>()
-        snapshot.appendSections([.content])
-        snapshot.appendItems([log.text])
+        var snapshot = NSDiffableDataSourceSnapshot<Section, AnyHashable>()
+        snapshot.appendSections([.metadata, .content])
+        let datum = MetadataType.allCases.map { Metadata(type: $0, content: getContent(of: $0, from: log)) }
+        snapshot.appendItems(datum, toSection: .metadata)
+        snapshot.appendItems([log.text], toSection: .content)
         apply(snapshot, animatingDifferences: false)
     }
 }
@@ -52,13 +64,23 @@ extension DetailDataSource: UITableViewDelegate {
         let interaction = UIContextMenuInteraction(delegate: self)
         cell.addInteraction(interaction)
     }
+    
+    internal func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 8
+    }
+
+    internal func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footerView = UIView()
+        footerView.backgroundColor = .clear
+        return footerView
+    }
 }
 
 // MARK: - UIContextMenuInteractionDelegate
 extension DetailDataSource: UIContextMenuInteractionDelegate {
     
     internal func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
-        guard let indexPath = tableView?.indexPathForRow(at: location), let text = itemIdentifier(for: indexPath) else { return nil }
+        guard let indexPath = tableView?.indexPathForRow(at: location), let text = itemIdentifier(for: indexPath) as? String else { return nil }
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
             let children = Interaction.allCases.map { interaction in UIAction(title: interaction.rawValue) { [weak self] _ in
                 self?._interaction.send((text, interaction))
@@ -69,5 +91,22 @@ extension DetailDataSource: UIContextMenuInteractionDelegate {
     
     internal enum Interaction: String, CaseIterable {
         case copy = "Copy"
+    }
+}
+
+// MARK: - Private Functions
+extension DetailDataSource {
+    
+    private func getContent(of data: MetadataType, from log: Log) -> String {
+        switch data {
+        case .file:
+            URL(fileURLWithPath: log.file).lastPathComponent
+        case .function:
+            log.function
+        case .line:
+            "\(log.line)"
+        case .time:
+            log.date.HHmmss
+        }
     }
 }

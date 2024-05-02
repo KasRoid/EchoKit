@@ -8,15 +8,22 @@
 import Foundation
 
 internal struct Log: Hashable, Identifiable {
-    let id: UUID
-    let date: Date
-    let text: String
-    let level: Level
     
-    init(text: String, level: Level) {
+    internal let id: UUID
+    internal let date: Date
+    internal let text: String
+    internal let level: Level
+    internal let file: String
+    internal let function: String
+    internal let line: Int
+    
+    internal init(text: String, level: Level, file: String = #file, function: String = #function, line: Int = #line) {
         self.id = UUID()
         self.date = Date()
         self.text = text
         self.level = level
+        self.file = file
+        self.function = function
+        self.line = line
     }
 }

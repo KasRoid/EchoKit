@@ -24,8 +24,8 @@ extension Console {
         setupConsole()
     }
     
-    public static func echo(_ text: String, level: Level = .debug) {
-        let log = Log(text: text, level: level)
+    public static func echo(_ text: String, level: Level = .info, file: String = #file, function: String = #function, line: Int = #line) {
+        let log = Log(text: text, level: level, file: file, function: function, line: line)
         buffer.send(.append(log: log))
     }
 }

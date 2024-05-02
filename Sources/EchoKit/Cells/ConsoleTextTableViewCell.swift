@@ -14,8 +14,6 @@ internal final class ConsoleTextTableViewCell: BaseTableViewCell {
     @IBOutlet private weak var timeLabel: UILabel!
     @IBOutlet private weak var descriptionLabel: UILabel!
     
-    private var log: Log?
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         setupUI()
@@ -26,9 +24,17 @@ internal final class ConsoleTextTableViewCell: BaseTableViewCell {
 extension ConsoleTextTableViewCell {
     
     internal func prepare(log: Log) {
-        self.log = log
         timeLabel.text = log.date.HHmmss
+        timeLabel.textColor = UIColor(level: log.level)
         descriptionLabel.text = log.text
+        descriptionLabel.textColor = UIColor(level: log.level)
+    }
+    
+    internal func prepare(metadata: Metadata) {
+        timeLabel.text = metadata.type.rawValue.capitalized + ":"
+        timeLabel.textColor = UIColor(level: .notice)
+        descriptionLabel.text = metadata.content
+        descriptionLabel.textColor = UIColor(level: .notice)
     }
 }
 
