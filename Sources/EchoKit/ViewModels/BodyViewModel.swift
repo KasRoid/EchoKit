@@ -11,8 +11,9 @@ internal final class BodyViewModel {
     
     @Published private(set) var logs: [Log] = []
     @Published private(set) var selectedLog: Log?
-    @Published private(set) var isFilterable = false
+    @Published private(set) var filter: Filter?
     private(set) var filteredLevels: [Level] = Level.allCases
+    private(set) var filteredKeys: [String] = Buffer.shared.filterKeys
     
     private let _result = PassthroughSubject<Result, Never>()
     internal var result: AnyPublisher<Result, Never> { _result.eraseToAnyPublisher() }
@@ -52,8 +53,9 @@ extension BodyViewModel {
         case copyText(text: String)
         case showDetail(Log)
         case quit
-        case toggleFilter
+        case toggleFilter(Filter?)
         case setLevelFilter([Level])
+        case setCustomFilter([String])
     }
     
     internal func send(_ action: Action) {
@@ -67,16 +69,32 @@ extension BodyViewModel {
             _result.send(.isQuitable(true))
             _result.send(.isFilterable(false))
         case .quit:
-            isFilterable = false
+            filter = nil
             selectedLog = nil
             _result.send(.isQuitable(false))
             _result.send(.isFilterable(true))
-        case .toggleFilter:
-            isFilterable.toggle()
+        case .toggleFilter(let filter):
+            self.filter = filter
+            _result.send(.isQuitable(filter != nil))
+            _result.send(.isFilterable(filter == nil))
         case .setLevelFilter(let filters):
             filteredLevels = filters
-            logs = Buffer.shared.logs.filter { filters.contains($0.level) }
+            applyFilters()
+        case .setCustomFilter(let filters):
+            filteredKeys = filters
+            applyFilters()
         }
+    }
+    
+    private func applyFilters() {
+        logs = Buffer.shared.logs
+            .filter {
+                if Buffer.shared.filterKeys.isEmpty {
+                    return filteredLevels.contains($0.level)
+                } else {
+                    return filteredLevels.contains($0.level) && filteredKeys.contains($0.filterKey)
+                }
+            }
     }
 }
 

@@ -43,7 +43,10 @@ internal final class DetailDataSource: UITableViewDiffableDataSource<Section, An
     internal func update(log: Log) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, AnyHashable>()
         snapshot.appendSections([.metadata, .content])
-        let datum = MetadataType.allCases.map { Metadata(type: $0, content: getContent(of: $0, from: log)) }
+        let datum = MetadataType.allCases.compactMap { type -> Metadata? in
+            guard let content = getContent(of: type, from: log) else { return nil }
+            return Metadata(type: type, content: content)
+        }
         snapshot.appendItems(datum, toSection: .metadata)
         snapshot.appendItems([log.text], toSection: .content)
         apply(snapshot, animatingDifferences: false)
@@ -68,7 +71,7 @@ extension DetailDataSource: UITableViewDelegate {
     internal func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 8
     }
-
+    
     internal func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let footerView = UIView()
         footerView.backgroundColor = .clear
@@ -97,7 +100,7 @@ extension DetailDataSource: UIContextMenuInteractionDelegate {
 // MARK: - Private Functions
 extension DetailDataSource {
     
-    private func getContent(of data: MetadataType, from log: Log) -> String {
+    private func getContent(of data: MetadataType, from log: Log) -> String? {
         switch data {
         case .file:
             URL(fileURLWithPath: log.file).lastPathComponent
@@ -107,6 +110,8 @@ extension DetailDataSource {
             "\(log.line)"
         case .time:
             log.date.HHmmss
+        case .filterKey:
+            Buffer.shared.filterKeys.isEmpty ? nil : log.filterKey
         }
     }
 }

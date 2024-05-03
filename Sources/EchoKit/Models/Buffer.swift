@@ -12,6 +12,7 @@ internal final class Buffer {
     static let shared = Buffer()
     
     @Published private(set) var logs: [Log] = []
+    private(set) var filterKeys: [String] = []
 }
 
 // MARK: - Methods
@@ -31,6 +32,7 @@ extension Buffer {
     
     internal enum Action {
         case append(log: Log)
+        case setFilterKeys([String])
         case clear
     }
     
@@ -38,6 +40,8 @@ extension Buffer {
         switch action {
         case .append(let log):
             logs.append(log)
+        case .setFilterKeys(let filterKeys):
+            self.filterKeys = filterKeys
         case .clear:
             logs.removeAll()
         }

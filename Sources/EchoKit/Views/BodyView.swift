@@ -17,6 +17,7 @@ internal final class BodyView: UIView {
     private var consoleDataSource: ConsoleDataSource?
     private var detailDataSource: DetailDataSource?
     private var levelFilterDataSource: FilterDataSource<Level>?
+    private var customFilterDataSource: FilterDataSource<String>?
     private var consoleCancellables = Set<AnyCancellable>()
     private var auxiliaryCancellables = Set<AnyCancellable>()
     private var auxiliaryTableViewTapGesture: UITapGestureRecognizer?
@@ -70,17 +71,26 @@ extension BodyView {
             }
             .store(in: &consoleCancellables)
         
-        viewModel.$isFilterable
+        viewModel.$filter
             .sink { [weak self] in
                 guard let self else { return }
-                auxiliaryTableView.isHidden = !$0
-                if $0 {
-                    let filter = Level.allCases
-                    let selected = viewModel.filteredLevels
-                    setupLevelFilterDataSource(filters: filter, selected: selected)
+                auxiliaryTableView.isHidden = $0 == nil
+                if let filter = $0 {
+                    switch filter {
+                    case .custom:
+                        let filters = Buffer.shared.filterKeys
+                        let selected = viewModel.filteredKeys
+                        setupCustomFilterDataSource(filters: filters, selected: selected)
+                    case .level:
+                        let filters = Level.allCases
+                        let selected = viewModel.filteredLevels
+                        setupLevelFilterDataSource(filters: filters, selected: selected)
+                    }
                 } else {
                     levelFilterDataSource?.finish()
                     levelFilterDataSource = nil
+                    customFilterDataSource?.finish()
+                    customFilterDataSource = nil
                     resetAuxiliaryTableView()
                 }
             }
@@ -141,10 +151,19 @@ extension BodyView {
     
     private func setupLevelFilterDataSource(filters: [Level], selected: [Level]) {
         levelFilterDataSource = .init(tableView: auxiliaryTableView, filters: filters)
-        let prompt = Prompt(title: "Select Filter", description: "[Tap to select]")
+        let prompt = Prompt(title: "Select Level", description: "[Tap to select]")
         levelFilterDataSource?.update(prompt: prompt, selected: selected)
         levelFilterDataSource?.result
             .sink { [weak self] in self?.viewModel.send(.setLevelFilter($0)) }
+            .store(in: &auxiliaryCancellables)
+    }
+    
+    private func setupCustomFilterDataSource(filters: [String], selected: [String]) {
+        customFilterDataSource = .init(tableView: auxiliaryTableView, filters: filters)
+        let prompt = Prompt(title: "Select filter", description: "[Tap to select]")
+        customFilterDataSource?.update(prompt: prompt, selected: selected)
+        customFilterDataSource?.result
+            .sink { [weak self] in self?.viewModel.send(.setCustomFilter($0)) }
             .store(in: &auxiliaryCancellables)
     }
     

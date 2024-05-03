@@ -49,7 +49,8 @@ extension HeaderViewModel {
         case .changeActions(let isQuitable):
             moreActions = isQuitable ? MoreAction.quitabletActions : MoreAction.defaultActions
         case .toggleFilter:
-            _result.send(.filter)
+            let showOption = !Buffer.shared.filterKeys.isEmpty
+            _result.send(.filter(showOption: showOption))
         case .enableFilter(let isEnabled):
             isFilterEnabled = isEnabled
         }
@@ -63,7 +64,7 @@ extension HeaderViewModel {
         case actions(actions: [MoreAction], handler: (MoreAction) -> Void)
         case window(action: WindowControls.Action)
         case quit
-        case filter
+        case filter(showOption: Bool)
     }
     
     private func handleAction(_ action: MoreAction) {
@@ -73,7 +74,7 @@ extension HeaderViewModel {
         case .systemInfo:
             Console.echo(System.info)
         case .divider:
-            let log = Log(text: "==========", level: .info)
+            let log = Log(text: "==========", level: Level.info)
             Buffer.shared.send(.append(log: log))
         case .clear:
             Buffer.shared.send(.clear)

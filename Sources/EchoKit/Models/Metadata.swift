@@ -7,9 +7,10 @@
 
 internal enum MetadataType: String, CaseIterable {
     case file
-    case function
+    case function = "Func"
     case line
     case time
+    case filterKey = "Fkey"
 }
 
 internal struct Metadata: Hashable {

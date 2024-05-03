@@ -8,7 +8,7 @@
 import Combine
 import UIKit
 
-internal final class FilterDataSource<T: Hashable & RawRepresentable<String>>: UITableViewDiffableDataSource<Section, AnyHashable>, UITableViewDelegate {
+internal final class FilterDataSource<T: Hashable & CustomStringConvertible>: UITableViewDiffableDataSource<Section, AnyHashable>, UITableViewDelegate {
     
     internal typealias PromptCell = PromptTableViewCell
     internal typealias FilterCell = FilterTableViewCell
@@ -44,7 +44,7 @@ internal final class FilterDataSource<T: Hashable & RawRepresentable<String>>: U
         var snapshot = NSDiffableDataSourceSnapshot<Section, AnyHashable>()
         snapshot.appendSections([.prompt, .content])
         snapshot.appendItems([prompt], toSection: .prompt)
-        let filters = filters.map { Filter(title: $0.rawValue, isSelected: selected.contains($0), source: $0) }
+        let filters = filters.map { Filter(title: $0.description, isSelected: selected.contains($0), source: $0) }
         snapshot.appendItems(filters, toSection: .content)
         apply(snapshot, animatingDifferences: false)
     }

@@ -50,6 +50,13 @@ extension ConsoleViewController {
             self?.isPresenting = false
         }
     }
+    
+    private func showOptionSheet(handler: @escaping (Filter) -> Void) {
+        isPresenting = true
+        showActionSheet(actions: Filter.allCases, handler: handler) { [weak self] in
+            self?.isPresenting = false
+        }
+    }
 }
 
 // MARK: - Bindings
@@ -144,8 +151,14 @@ extension ConsoleViewController: ActionProvider {
                     self?.viewModel.send(.quit)
                 case .window(let action):
                     self?.viewModel.send(.adjustWindow(action))
-                case .filter:
-                    self?.viewModel.send(.filter)
+                case .filter(let showOption):
+                    if showOption {
+                        self?.showOptionSheet {
+                            self?.viewModel.send(.filter($0))
+                        }
+                    } else {
+                        self?.viewModel.send(.filter(.level))
+                    }
                 }
             }
             .store(in: &cancellables)
