@@ -90,11 +90,13 @@ extension BodyViewModel {
         logs = Buffer.shared.logs
             .filter {
                 if Buffer.shared.filterKeys.isEmpty {
-                    return filteredLevels.contains($0.level)
+                    filteredLevels.contains($0.level)
                 } else {
-                    return filteredLevels.contains($0.level) && filteredKeys.contains($0.filterKey)
+                    filteredLevels.contains($0.level) && filteredKeys.contains($0.filterKey)
                 }
             }
+        let isFiltered = !(filteredLevels == Level.allCases && filteredKeys == Buffer.shared.filterKeys)
+        _result.send(.isFiltered(isFiltered))
     }
 }
 
@@ -104,5 +106,6 @@ extension BodyViewModel {
     internal enum Result {
         case isQuitable(Bool)
         case isFilterable(Bool)
+        case isFiltered(Bool)
     }
 }

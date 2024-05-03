@@ -57,6 +57,8 @@ extension ConsoleViewModel {
                     self?.headerViewModel.send(.enableFilter(isEnabled: isFilterable))
                 case .isQuitable(let isQuitable):
                     self?.headerViewModel.send(.changeActions(isQuitable: isQuitable))
+                case .isFiltered(let isFiltered):
+                    self?.headerViewModel.send(.highlightFilter(isHighlighted: isFiltered))
                 }
             }
             .store(in: &cancellables)

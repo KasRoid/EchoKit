@@ -14,6 +14,7 @@ internal final class HeaderViewModel {
     internal var result: AnyPublisher<Result, Never> { _result.eraseToAnyPublisher() }
     
     @Published internal var isFilterEnabled = true
+    @Published internal var isFilterHighlighted = false
     
     private(set) var moreActions = MoreAction.defaultActions
     private var pasteboard: Pasteboard
@@ -38,6 +39,7 @@ extension HeaderViewModel {
         case changeActions(isQuitable: Bool)
         case toggleFilter
         case enableFilter(isEnabled: Bool)
+        case highlightFilter(isHighlighted: Bool)
     }
     
     internal func send(_ action: Action) {
@@ -53,6 +55,8 @@ extension HeaderViewModel {
             _result.send(.filter(showOption: showOption))
         case .enableFilter(let isEnabled):
             isFilterEnabled = isEnabled
+        case .highlightFilter(let isHighlighted):
+            isFilterHighlighted = isHighlighted
         }
     }
 }
