@@ -12,9 +12,9 @@ extension UIColor {
     convenience init(level: Level) {
         switch level {
         case .notice:
-            self.init(cgColor: UIColor.brown.cgColor)
-        case .debug:
             self.init(cgColor: UIColor.systemTeal.cgColor)
+        case .debug:
+            self.init(cgColor: UIColor.brown.cgColor)
         case .info:
             self.init(cgColor: UIColor.white.cgColor)
         case .trace:

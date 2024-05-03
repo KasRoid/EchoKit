@@ -45,6 +45,22 @@ extension Console {
         let log = Log(text: text, level: level, file: file, function: function, line: line)
         buffer.send(.append(log: log))
     }
+    
+    public static func measure(message: String? = nil, file: String = #file, function: String = #function, line: Int = #line, _ operation: @escaping (@escaping () -> Void) -> Void) {
+        let start = DispatchTime.now()
+        operation {
+            let end = DispatchTime.now()
+            let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
+            let timeInterval = Double(nanoTime) / 1_000_000_000
+            let formattedTime = String(format: "%.5f", timeInterval)
+            let text = if let message {
+                "\(message) \(formattedTime) sec, \(function)"
+            } else {
+                "\(formattedTime) sec, \(function)"
+            }
+            echo(text, level: .info, file: file, function: function, line: line)
+        }
+    }
 }
 
 // MARK: - Private Functions
