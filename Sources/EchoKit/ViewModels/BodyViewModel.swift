@@ -56,6 +56,7 @@ extension BodyViewModel {
         case toggleFilter(Filter?)
         case setLevelFilter([Level])
         case setCustomFilter([String])
+        case clearFilters
     }
     
     internal func send(_ action: Action) {
@@ -82,6 +83,10 @@ extension BodyViewModel {
             applyFilters()
         case .setCustomFilter(let filters):
             filteredKeys = filters
+            applyFilters()
+        case .clearFilters:
+            filteredLevels = Level.allCases
+            filteredKeys = Buffer.shared.filterKeys
             applyFilters()
         }
     }

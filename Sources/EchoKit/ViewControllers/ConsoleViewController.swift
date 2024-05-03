@@ -57,6 +57,14 @@ extension ConsoleViewController {
             self?.isPresenting = false
         }
     }
+    
+    private func showClearFilterAlert() {
+        isPresenting = true
+        showAlert(title: "Clear Filters",
+                  message: "Are you sure you want to clear all filters?",
+                  handler: { [weak self] in self?.viewModel.send(.clearFilters) },
+                  completion: { [weak self] in self?.isPresenting = false })
+    }
 }
 
 // MARK: - Bindings
@@ -159,6 +167,8 @@ extension ConsoleViewController: ActionProvider {
                     } else {
                         self?.viewModel.send(.filter(.level))
                     }
+                case .clearFilter:
+                    self?.showClearFilterAlert()
                 }
             }
             .store(in: &cancellables)

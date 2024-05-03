@@ -40,6 +40,7 @@ extension HeaderViewModel {
         case toggleFilter
         case enableFilter(isEnabled: Bool)
         case highlightFilter(isHighlighted: Bool)
+        case clearFilter
     }
     
     internal func send(_ action: Action) {
@@ -57,6 +58,9 @@ extension HeaderViewModel {
             isFilterEnabled = isEnabled
         case .highlightFilter(let isHighlighted):
             isFilterHighlighted = isHighlighted
+        case .clearFilter:
+            guard isFilterHighlighted else { return }
+            _result.send(.clearFilter)
         }
     }
 }
@@ -69,6 +73,7 @@ extension HeaderViewModel {
         case window(action: WindowControls.Action)
         case quit
         case filter(showOption: Bool)
+        case clearFilter
     }
     
     private func handleAction(_ action: MoreAction) {
