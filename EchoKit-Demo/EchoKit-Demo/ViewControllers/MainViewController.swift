@@ -9,7 +9,7 @@ import Combine
 import EchoKit
 import UIKit
 
-final class MainViewController: UIViewController, Echoable {
+final class MainViewController: UIViewController, Echoable, AlertProvider {
     
     @IBOutlet private weak var tableView: UITableView!
     
@@ -30,7 +30,7 @@ extension MainViewController {
     
     private func bind() {
         dataSource?.result
-            .sink { [weak self] in self?.viewModel.send(.tutorial($0)) }
+            .sink { [weak self] in self?.handleDataSourceResult($0) }
             .store(in: &cancellables)
         
         viewModel.$isMeasuring
@@ -53,5 +53,17 @@ extension MainViewController {
     private func setupUI() {
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 12))
         dataSource = .init(tableView: tableView)
+    }
+    
+    private func handleDataSourceResult(_ tutorial: Tutorial) {
+        switch tutorial {
+        case .about, .level, .measure:
+            viewModel.send(.tutorial(tutorial))
+        case .input:
+            showInputAlert(title: "Input", message: "Type any text") { text in
+                guard let text else { return }
+                Console.echo(text, level: .trace)
+            }
+        }
     }
 }

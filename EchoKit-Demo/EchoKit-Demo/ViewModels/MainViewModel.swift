@@ -37,9 +37,8 @@ extension MainViewModel {
         case .about:
             let text = "Find more information on \nhttps://github.com/KasRoid/EchoKit"
             Console.echo(text, level: .notice)
-        case .echo:
-            let text = ""
-            Console.echo(text, level: .debug)
+        case .input:
+            return
         case .level:
             Console.echo("==========", level: .info)
             Console.echo("There are \(Level.allCases.count) levels as below.\n", level: .info)

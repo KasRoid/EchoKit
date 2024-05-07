@@ -9,7 +9,7 @@ import Foundation
 
 enum Tutorial: String, CaseIterable {
     case about = "About EchoKit"
-    case echo = "Echo"
     case level = "Show levels"
+    case input = "Input"
     case measure = "Measure"
 }
