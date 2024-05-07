@@ -32,6 +32,11 @@ extension MainViewController {
         dataSource?.result
             .sink { [weak self] in self?.viewModel.send(.tutorial($0)) }
             .store(in: &cancellables)
+        
+        viewModel.$isMeasuring
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.dataSource?.updateMeasureState(isMeasuring: $0) }
+            .store(in: &cancellables)
     }
 }
 
@@ -46,6 +51,7 @@ extension MainViewController {
     }
     
     private func setupUI() {
+        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 12))
         dataSource = .init(tableView: tableView)
     }
 }

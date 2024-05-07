@@ -8,8 +8,8 @@
 import Foundation
 
 enum Tutorial: String, CaseIterable {
-    case about = "About"
+    case about = "About EchoKit"
     case echo = "Echo"
-    case level = "Level"
+    case level = "Show levels"
     case measure = "Measure"
 }

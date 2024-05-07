@@ -5,9 +5,14 @@
 //  Created by Lukas on 5/3/24.
 //
 
+import Combine
 import EchoKit
 
-final class MainViewModel {}
+final class MainViewModel {
+    
+    @Published private(set) var isMeasuring = false
+    private var finishMeasure: (() -> Void)?
+}
 
 // MARK: - Actions
 extension MainViewModel {
@@ -37,6 +42,7 @@ extension MainViewModel {
             Console.echo(text, level: .debug)
         case .level:
             Console.echo("==========", level: .info)
+            Console.echo("There are \(Level.allCases.count) levels as below.\n", level: .info)
             Console.echo("Notice", level: .notice)
             Console.echo("Info", level: .info)
             Console.echo("Debug", level: .debug)
@@ -47,8 +53,20 @@ extension MainViewModel {
             Console.echo("Critical", level: .critical)
             Console.echo("==========", level: .info)
         case .measure:
-            let text = ""
-            Console.echo(text, level: .notice)
+            measure()
         }
+    }
+    
+    private func measure() {
+        if isMeasuring {
+            finishMeasure?()
+            finishMeasure = nil
+        } else {
+            Console.echo("Measure Started")
+            Console.measure(message: "Measure finished, It took") { [weak self] done in
+                self?.finishMeasure = done
+            }
+        }
+        isMeasuring.toggle()
     }
 }
