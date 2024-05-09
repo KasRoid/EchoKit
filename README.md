@@ -17,16 +17,16 @@ EchoKit makes it easy to monitor and debug your iOS apps with a straightforward 
 
 ---
 
-### Requirements
+## Requirements
 
 - iOS 13.0 or later
 - Swift 5.0 or later
 
 ---
 
-### Installation
+## Installation
 
-#### Swift Package Manager
+### Swift Package Manager
 
 To integrate EchoKit into your project using Swift Package Manager, add it as a dependency within your `Package.swift` file:
 
@@ -40,9 +40,7 @@ Alternatively, you can add it via Xcode by navigating to:
 
 `File > Add Packages > Search for 'https://github.com/KasRoid/EchoKit'`
 
-
-
-#### CocoaPods
+### CocoaPods
 
 Add EchoKit to your `Podfile`:
 
@@ -54,32 +52,24 @@ Then, run the command:
 
 ---
 
-### Levels
+## Levels
 
 EchoKit offers eight logging levels for monitoring and debugging:
 
-- **notice**: Typically used for less important messages that may be useful in tracking application flow.
-
-- **info**: Provides general information about application processes, often used for regular operations.
-
-- **debug**: Offers detailed debugging information helpful during development to diagnose problems.
-
-- **trace**: Provides more granular debugging information than `debug`, capturing step-by-step tracing of operations.
-
-- **warning**: Indicates a possible issue or unexpected situation that isn't necessarily an error but requires attention.
-
-- **error**: Represents a failure or issue that disrupts normal operation but doesn't cause the program to terminate.
-
-- **fault**: Signifies a serious failure that can potentially corrupt application state or require a restart to recover.
-
-- **critical**: Used for extremely severe errors that may cause premature termination and require immediate attention.
-
+1.**notice**: Typically used for less important messages that may be useful in tracking application flow.
+2.**info**: Provides general information about application processes, often used for regular operations.
+3.**debug**: Offers detailed debugging information helpful during development to diagnose problems.
+4.**trace**: Provides more granular debugging information than `debug`, capturing step-by-step tracing of operations.
+5.**warning**: Indicates a possible issue or unexpected situation that isn't necessarily an error but requires attention.
+6.**error**: Represents a failure or issue that disrupts normal operation but doesn't cause the program to terminate.
+7.**fault**: Signifies a serious failure that can potentially corrupt application state or require a restart to recover.
+8.**critical**: Used for extremely severe errors that may cause premature termination and require immediate attention.
 
 ---
 
-### Getting Started
+## Getting Started
 
-#### Basic Usage
+### Basic Usage
 
 1. **Import EchoKit**
 
@@ -118,7 +108,9 @@ final class EchoViewController: UIViewController, Echoable {
 }
 ```
 
-#### Custom Log Levels
+---
+
+### Custom Log Levels
 
 If you're using custom log levels and would like to integrate them with EchoKit, follow these steps:
 
@@ -190,10 +182,10 @@ Console.register(LogLevel.self)
 
 ---
 
-### Credits
+## Credits
 
 - **Doyoung Song**
 
-### License
+## License
 
 EchoKit is released under the MIT license. See the LICENSE file for more details.
