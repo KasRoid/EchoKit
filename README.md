@@ -100,9 +100,10 @@ You can print messages to the EchoKit console using the `print` function by adop
 
 ```swift
 final class EchoViewController: UIViewController, Echoable { 
+
     override func viewDidLoad() { 
-    super.viewDidLoad() 
-    print("This message appears in both the EchoKit console and Xcode's console.") 
+        super.viewDidLoad() 
+        print("This message appears in both the EchoKit console and Xcode's console.") 
     }
 }
 ```
