@@ -15,14 +15,10 @@ EchoKit makes it easy to monitor and debug your iOS apps with a straightforward 
 - [Credits](#credits)
 - [License](#license)
 
----
-
 ## Requirements
 
 - iOS 13.0 or later
 - Swift 5.0 or later
-
----
 
 ## Installation
 
@@ -50,8 +46,6 @@ Then, run the command:
 
 `pod install`
 
----
-
 ## Levels
 
 EchoKit offers eight logging levels for monitoring and debugging:
@@ -64,8 +58,6 @@ EchoKit offers eight logging levels for monitoring and debugging:
 6.**error**: Represents a failure or issue that disrupts normal operation but doesn't cause the program to terminate.
 7.**fault**: Signifies a serious failure that can potentially corrupt application state or require a restart to recover.
 8.**critical**: Used for extremely severe errors that may cause premature termination and require immediate attention.
-
----
 
 ## Getting Started
 
@@ -179,8 +171,6 @@ Register your custom log levels with EchoKit.
 ```swift
 Console.register(LogLevel.self)
 ```
-
----
 
 ## Credits
 
