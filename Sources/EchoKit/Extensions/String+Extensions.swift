@@ -10,6 +10,11 @@ import UIKit
 internal extension String {
     
     var nib: UINib {
-        return UINib(nibName: self, bundle: Bundle.module)
+        #if SWIFT_PACKAGE
+        let bundle = Bundle.module
+        #else
+        let bundle = Bundle(for: ConsoleViewController.self)
+        #endif
+        return UINib(nibName: self, bundle: bundle)
     }
 }

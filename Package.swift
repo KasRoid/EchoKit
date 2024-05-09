@@ -16,8 +16,7 @@ let package = Package(
     targets: [
         .target(
             name: "EchoKit",
-            path: "Sources/EchoKit",
-            resources: [.copy("EchoKit")]
+            path: "Sources/EchoKit"
         ),
         .testTarget(
             name: "EchoKitTests",
