@@ -15,6 +15,8 @@ EchoKit makes it easy to monitor and debug your iOS apps with a straightforward 
 - [Credits](#credits)
 - [License](#license)
 
+---
+
 ### Requirements
 
 - iOS 13.0 or later
@@ -27,10 +29,6 @@ EchoKit makes it easy to monitor and debug your iOS apps with a straightforward 
 #### Swift Package Manager
 
 To integrate EchoKit into your project using Swift Package Manager, add it as a dependency within your `Package.swift` file:
-
-swift
-
-Copy code
 
 ```swift
 dependencies: [
@@ -58,14 +56,38 @@ Then, run the command:
 
 EchoKit offers eight logging levels for monitoring and debugging:
 
-- **notice**: Typically used for less important messages that may be useful in tracking application flow.
-- **info**: Provides general information about application processes, often used for regular operations.
-- **debug**: Offers detailed debugging information helpful during development to diagnose problems.
-- **trace**: Provides more granular debugging information than `debug`, capturing step-by-step tracing of operations.
-- **warning**: Indicates a possible issue or unexpected situation that isn't necessarily an error but requires attention.
-- **error**: Represents a failure or issue that disrupts normal operation but doesn't cause the program to terminate.
-- **fault**: Signifies a serious failure that can potentially corrupt application state or require a restart to recover.
-- **critical**: Used for extremely severe errors that may cause premature termination and require immediate attention.
+- **notice**
+    
+Typically used for less important messages that may be useful in tracking application flow.
+
+- **info**
+
+Provides general information about application processes, often used for regular operations.
+
+- **debug** 
+    
+Offers detailed debugging information helpful during development to diagnose problems.
+
+- **trace** 
+    
+Provides more granular debugging information than `debug`, capturing step-by-step tracing of operations.
+
+- **warning** 
+    
+Indicates a possible issue or unexpected situation that isn't necessarily an error but requires attention.
+
+- **error** 
+    
+Represents a failure or issue that disrupts normal operation but doesn't cause the program to terminate.
+
+- **fault** 
+    
+Signifies a serious failure that can potentially corrupt application state or require a restart to recover.
+
+- **critical** 
+    
+Used for extremely severe errors that may cause premature termination and require immediate attention.
+
 
 ---
 
@@ -74,30 +96,32 @@ EchoKit offers eight logging levels for monitoring and debugging:
 #### Basic Usage
 
 1. **Import EchoKit**
-    Start by importing `EchoKit` wherever you want to use it.
+
+Start by importing `EchoKit` wherever you want to use it.
 
 ```swift
 import EchoKit
 ```
 
 2. **Start EchoKit**
-    Initialize EchoKit by calling `Console.start()` once to enable logging. It is recommended to call this in `SceneDelegate` or the `viewDidLoad` method of the first `UIViewController`.
+
+Initialize EchoKit by calling `Console.start()` once to enable logging. It is recommended to call this in `SceneDelegate` or the `viewDidLoad` method of the first `UIViewController`.
 
 ```swift
 Console.start()
 ```
 
 3. **Log Messages**
-    Use `Console.echo` to log messages at different levels.
+
+Use `Console.echo` to log messages at different levels. Note that this will only print messages in the EchoKit console, not the Xcode console.
 
 ```swift
 Console.echo("Welcome to EchoKit", level: .notice)
 ```
-  
-  Note that this will only print messages in the EchoKit console, not the Xcode console.
 
 4. **Integrate with the `print` Function**
-    You can print messages to the EchoKit console using the `print` function by adopting the `Echoable` protocol.
+
+You can print messages to the EchoKit console using the `print` function by adopting the `Echoable` protocol.
 
 ```swift
 final class EchoViewController: UIViewController, Echoable { 
@@ -113,7 +137,8 @@ final class EchoViewController: UIViewController, Echoable {
 If you're using custom log levels and would like to integrate them with EchoKit, follow these steps:
 
 1. **Custom Log Levels**
-    To integrate your custom log levels with EchoKit, adopt the `EchoLevel` protocol.
+
+To integrate your custom log levels with EchoKit, adopt the `EchoLevel` protocol.
 
 ```swift
 enum LogLevel: String, Codable, EchoLevel {
@@ -156,7 +181,8 @@ enum LogLevel: String, Codable, EchoLevel {
 ```
  
 2. **Custom Logger**
-    Implement a custom logger to route messages through EchoKit. For example, if you are using a logger like the one below:
+    
+Implement a custom logger to route messages through EchoKit. For example, if you are using a logger like the one below:
 
 ```swift
 final class Logger {     
@@ -169,7 +195,8 @@ final class Logger {
 ```
     
 3. **Register Custom Log Levels**
-    Register your custom log levels with EchoKit.
+
+Register your custom log levels with EchoKit.
 
 ```swift
 Console.register(LogLevel.self)
