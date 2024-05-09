@@ -15,6 +15,6 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = "13.0"
   s.swift_version = "5.0"
 
-  s.source_files  = "Sources/**/*.swift"
+  s.source_files  = "Sources/EchoKit/**/*.swift"
   s.exclude_files = "Tests"
 end

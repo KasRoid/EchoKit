@@ -15,9 +15,13 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "EchoKit"),
+            name: "EchoKit",
+            path: "Sources/EchoKit"
+        ),
         .testTarget(
             name: "EchoKitTests",
-            dependencies: ["EchoKit"]),
+            dependencies: ["EchoKit"],
+            path: "Tests/EchoKitTests"
+        ),
     ]
 )
