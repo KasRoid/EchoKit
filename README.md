@@ -1,5 +1,7 @@
 # EchoKit
 
+![EchoKit Main](Resources/Introducing-EchoKit.png)
+
 EchoKit makes it easy to monitor and debug your iOS apps with a straightforward and customizable logging solution.
 
 ## Contents
@@ -40,7 +42,9 @@ Alternatively, you can add it via Xcode by navigating to:
 
 Add EchoKit to your `Podfile`:
 
-`pod 'EchoKit'`
+```text
+pod 'EchoKit'
+```
 
 Then, run the command:
 
