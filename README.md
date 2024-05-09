@@ -40,6 +40,8 @@ Alternatively, you can add it via Xcode by navigating to:
 
 `File > Add Packages > Search for 'https://github.com/KasRoid/EchoKit'`
 
+
+
 #### CocoaPods
 
 Add EchoKit to your `Podfile`:
@@ -56,37 +58,21 @@ Then, run the command:
 
 EchoKit offers eight logging levels for monitoring and debugging:
 
-- **notice**
-    
-Typically used for less important messages that may be useful in tracking application flow.
+- **notice**: Typically used for less important messages that may be useful in tracking application flow.
 
-- **info**
+- **info**: Provides general information about application processes, often used for regular operations.
 
-Provides general information about application processes, often used for regular operations.
+- **debug**: Offers detailed debugging information helpful during development to diagnose problems.
 
-- **debug** 
-    
-Offers detailed debugging information helpful during development to diagnose problems.
+- **trace**: Provides more granular debugging information than `debug`, capturing step-by-step tracing of operations.
 
-- **trace** 
-    
-Provides more granular debugging information than `debug`, capturing step-by-step tracing of operations.
+- **warning**: Indicates a possible issue or unexpected situation that isn't necessarily an error but requires attention.
 
-- **warning** 
-    
-Indicates a possible issue or unexpected situation that isn't necessarily an error but requires attention.
+- **error**: Represents a failure or issue that disrupts normal operation but doesn't cause the program to terminate.
 
-- **error** 
-    
-Represents a failure or issue that disrupts normal operation but doesn't cause the program to terminate.
+- **fault**: Signifies a serious failure that can potentially corrupt application state or require a restart to recover.
 
-- **fault** 
-    
-Signifies a serious failure that can potentially corrupt application state or require a restart to recover.
-
-- **critical** 
-    
-Used for extremely severe errors that may cause premature termination and require immediate attention.
+- **critical**: Used for extremely severe errors that may cause premature termination and require immediate attention.
 
 
 ---
