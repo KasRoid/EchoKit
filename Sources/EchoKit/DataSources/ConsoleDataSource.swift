@@ -26,7 +26,7 @@ internal final class ConsoleDataSource: UITableViewDiffableDataSource<Section, L
             cell?.prepare(log: log)
             return cell
         }
-        tableView.register(ConsoleCell.identifier.nib(for: ConsoleCell.self), forCellReuseIdentifier: ConsoleCell.identifier)
+        tableView.register(ConsoleCell.identifier.nib, forCellReuseIdentifier: ConsoleCell.identifier)
         tableView.delegate = self
     }
     
