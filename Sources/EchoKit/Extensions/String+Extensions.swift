@@ -7,9 +7,9 @@
 
 import UIKit
 
-public extension String {
+internal extension String {
     
-    func nib(bundle: Bundle? = nil) -> UINib {
+    var nib: UINib {
         return UINib(nibName: self, bundle: bundle)
     }
 }

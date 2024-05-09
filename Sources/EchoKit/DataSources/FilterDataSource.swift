@@ -35,8 +35,8 @@ internal final class FilterDataSource<T: Hashable & CustomStringConvertible>: UI
             }
             return UITableViewCell()
         }
-        tableView.register(PromptCell.identifier.nib(bundle: .module), forCellReuseIdentifier: PromptCell.identifier)
-        tableView.register(FilterCell.identifier.nib(bundle: .module), forCellReuseIdentifier: FilterCell.identifier)
+        tableView.register(PromptCell.identifier.nib, forCellReuseIdentifier: PromptCell.identifier)
+        tableView.register(FilterCell.identifier.nib, forCellReuseIdentifier: FilterCell.identifier)
         tableView.delegate = self
     }
     

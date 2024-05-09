@@ -35,8 +35,8 @@ internal final class DetailDataSource: UITableViewDiffableDataSource<Section, An
             }
             return UITableViewCell()
         }
-        tableView.register(ConsoleCell.identifier.nib(bundle: .module), forCellReuseIdentifier: ConsoleCell.identifier)
-        tableView.register(DetailCell.identifier.nib(bundle: .module), forCellReuseIdentifier: DetailCell.identifier)
+        tableView.register(ConsoleCell.identifier.nib, forCellReuseIdentifier: ConsoleCell.identifier)
+        tableView.register(DetailCell.identifier.nib, forCellReuseIdentifier: DetailCell.identifier)
         tableView.delegate = self
     }
     
