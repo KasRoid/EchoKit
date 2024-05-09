@@ -11,12 +11,6 @@ internal extension UIView {
     
     @discardableResult
     func setupWithXib() -> UIView? {
-        #if SWIFT_PACKAGE
-        let bundle = Bundle.module
-        #else
-        let bundle = Bundle(for: ConsoleViewController.self)
-        #endif
-        
         guard let view = bundle.loadNibNamed(String(describing: type(of: self)), owner: self, options: nil)?.first as? UIView else {
             print("Error: Could not load the XIB for \(String(describing: type(of: self)))")
             return nil
