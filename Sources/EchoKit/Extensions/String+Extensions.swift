@@ -11,9 +11,9 @@ internal extension String {
     
     func nib(for aClass: AnyClass) -> UINib {
         #if SWIFT_PACKAGE
-        let bundle = Bundle.module
+        let bundle: Bundle = .module
         #else
-        let bundle = Bundle(for: aClass)
+        let bundle: Bundle = Bundle(for: aClass)
         #endif
         return UINib(nibName: self, bundle: bundle)
     }
