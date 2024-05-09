@@ -1,6 +1,6 @@
 # EchoKit
 
-![EchoKit Main](https://github.com/KasRoid/EchoKit/Resources/Introducing-EchoKit.jpg)
+![EchoKit Main](https://github.com/KasRoid/EchoKit/blob/develop/Resources/Introducing-EchoKit.jpg)
 
 EchoKit makes it easy to monitor and debug your iOS apps with a straightforward and customizable logging solution.
 
