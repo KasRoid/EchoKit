@@ -51,12 +51,19 @@ Then, run the command:
 EchoKit offers eight logging levels for monitoring and debugging:
 
 1.**notice**: Typically used for less important messages that may be useful in tracking application flow.
+
 2.**info**: Provides general information about application processes, often used for regular operations.
+
 3.**debug**: Offers detailed debugging information helpful during development to diagnose problems.
+
 4.**trace**: Provides more granular debugging information than `debug`, capturing step-by-step tracing of operations.
+
 5.**warning**: Indicates a possible issue or unexpected situation that isn't necessarily an error but requires attention.
+
 6.**error**: Represents a failure or issue that disrupts normal operation but doesn't cause the program to terminate.
+
 7.**fault**: Signifies a serious failure that can potentially corrupt application state or require a restart to recover.
+
 8.**critical**: Used for extremely severe errors that may cause premature termination and require immediate attention.
 
 ## Getting Started
