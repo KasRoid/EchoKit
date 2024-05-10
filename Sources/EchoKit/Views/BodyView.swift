@@ -55,6 +55,7 @@ extension BodyView {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 self?.consoleDataSource?.update(logs: $0)
+                guard self?.consoleDataSource?.isLatestData == false else { return }
                 self?.scrollTo(log: $0.last)
             }
             .store(in: &consoleCancellables)
