@@ -15,7 +15,7 @@ internal final class ConsoleDataSource: UITableViewDiffableDataSource<Section, L
     private weak var tableView: UITableView?
     private let _tap = PassthroughSubject<Log, Never>()
     private let _interaction = PassthroughSubject<(log: Log, interaction: Interaction), Never>()
-    private(set) var isLatestData = false
+    private(set) var isLatestData = true
     
     internal var tap: AnyPublisher<Log, Never> { _tap.eraseToAnyPublisher() }
     internal var interaction: AnyPublisher<(log: Log, interaction: Interaction), Never> { _interaction.eraseToAnyPublisher() }
@@ -61,11 +61,11 @@ extension ConsoleDataSource: UITableViewDelegate {
         let tableViewHeight = scrollView.frame.size.height
         
         if contentOffsetY <= 0 { // Top
-            isLatestData = true
-        } else if contentOffsetY + tableViewHeight >= contentHeight { // Bottom
             isLatestData = false
-        } else {
+        } else if contentOffsetY + tableViewHeight >= contentHeight - 20 { // Bottom
             isLatestData = true
+        } else {
+            isLatestData = false
         }
     }
 }
