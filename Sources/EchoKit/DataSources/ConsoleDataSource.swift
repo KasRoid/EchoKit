@@ -59,7 +59,8 @@ extension ConsoleDataSource: UITableViewDelegate {
 extension ConsoleDataSource: UIContextMenuInteractionDelegate {
     
     internal func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
-        guard let indexPath = tableView?.indexPathForRow(at: location), let log = itemIdentifier(for: indexPath) else { return nil }
+        guard let convertedLocation = tableView?.convert(location, from: interaction.view),
+              let indexPath = tableView?.indexPathForRow(at: convertedLocation), let log = itemIdentifier(for: indexPath) else { return nil }
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
             let children = Interaction.allCases.map { interaction in UIAction(title: interaction.rawValue) { [weak self] _ in
                 self?._interaction.send((log, interaction))

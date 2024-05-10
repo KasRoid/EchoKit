@@ -189,12 +189,12 @@ Console.register(LogLevel.self)
 
 ### Measuring Execution Time
 
-`Console.measure` is used to measure the execution time of a code block. You can specify a message, and it works with asynchronous functions too. Simply call done() at the appropriate timing.
+`Console.measure` is used to measure the execution time of a code block. You can specify a message, and it works with asynchronous functions too. Simply call `done()` at the appropriate timing.
 
 Usage Example:
 
 ```swift
-Console.measure(message: "TableView setup took") { done in
+Console.measure(message: "Expensive operation took") { done in
     // Code to measure
     expensiveOperation()
     done()
