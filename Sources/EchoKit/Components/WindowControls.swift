@@ -73,8 +73,8 @@ extension WindowControls {
 extension WindowControls {
     
     private func setupUI() {
-        closeButtonView.prepare(color: .red)
-        minimizeButtonView.prepare(color: .yellow)
-        fullscreenButtonView.prepare(color: .green)
+        closeButtonView.prepare(color: .close)
+        minimizeButtonView.prepare(color: .minimize)
+        fullscreenButtonView.prepare(color: .fullscreen)
     }
 }

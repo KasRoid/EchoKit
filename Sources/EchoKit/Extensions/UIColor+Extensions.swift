@@ -29,4 +29,8 @@ extension UIColor {
             self.init(cgColor: UIColor.red.cgColor)
         }
     }
+    
+    static let close = UIColor(red: 1.0, green: 0.3647, blue: 0.3725, alpha: 1.0)
+    static let minimize = UIColor(red: 1.0, green: 0.8, blue: 0.0, alpha: 1.0)
+    static let fullscreen = UIColor(red: 0.3294, green: 0.8471, blue: 0.3137, alpha: 1.0)
 }
