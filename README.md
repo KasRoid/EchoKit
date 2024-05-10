@@ -14,6 +14,7 @@ EchoKit makes it easy to monitor and debug your iOS apps with a straightforward 
 - [Getting Started](#getting-started)
     - [Basic Usage](#basic-usage)
     - [Custom Log Levels](#custom-log-levels)
+    - [Measuring Execution Time](#measuring-execution-time)
 - [Credits](#credits)
 - [License](#license)
 
@@ -182,6 +183,32 @@ Register your custom log levels with EchoKit.
 
 ```swift
 Console.register(LogLevel.self)
+```
+
+---
+
+### Measuring Execution Time
+
+`Console.measure` is used to measure the execution time of a code block. You can specify a message, and it works with asynchronous functions too. Simply call done() at the appropriate timing.
+
+Usage Example:
+
+```swift
+Console.measure(message: "TableView setup took") { done in
+    // Code to measure
+    expensiveOperation()
+    done()
+}
+```
+
+Using Without a Message:
+
+```swift
+Console.measure { done in
+    // Code to measure
+    expensiveOperation()
+    done()
+}
 ```
 
 ## Credits
