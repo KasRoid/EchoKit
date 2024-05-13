@@ -73,6 +73,7 @@ extension BodyView {
             .store(in: &consoleCancellables)
         
         viewModel.$filter
+            .dropFirst()
             .sink { [weak self] in
                 guard let self else { return }
                 auxiliaryTableView.isHidden = $0 == nil

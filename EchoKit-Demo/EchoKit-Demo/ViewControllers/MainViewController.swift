@@ -51,8 +51,8 @@ extension MainViewController {
     }
     
     private func setupUI() {
-        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 12))
         dataSource = .init(tableView: tableView)
+        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 12))
     }
     
     private func handleDataSourceResult(_ tutorial: Tutorial) {
