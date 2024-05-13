@@ -37,6 +37,7 @@ extension HeaderViewModel {
         case adjustWindow(WindowControls.Action)
         case showActions
         case changeActions(isQuitable: Bool)
+        case toggleWindowPosition
         case toggleFilter
         case enableFilter(isEnabled: Bool)
         case highlightFilter(isHighlighted: Bool)
@@ -51,6 +52,8 @@ extension HeaderViewModel {
             _result.send(.actions(actions: moreActions, handler: handleAction))
         case .changeActions(let isQuitable):
             moreActions = isQuitable ? MoreAction.quitabletActions : MoreAction.defaultActions
+        case .toggleWindowPosition:
+            _result.send(.windowPosition)
         case .toggleFilter:
             let showOption = !Buffer.shared.filterKeys.isEmpty
             _result.send(.filter(showOption: showOption))
@@ -71,6 +74,7 @@ extension HeaderViewModel {
     internal enum Result {
         case actions(actions: [MoreAction], handler: (MoreAction) -> Void)
         case window(action: WindowControls.Action)
+        case windowPosition
         case quit
         case filter(showOption: Bool)
         case clearFilter

@@ -50,6 +50,10 @@ extension HeaderView {
             .sink { [weak self] in self?.viewModel.send(.adjustWindow($0)) }
             .store(in: &cancellables)
         
+        titleLabel.gesturePublisher(.tap)
+            .sink { [weak self] _ in self?.viewModel.send(.toggleWindowPosition) }
+            .store(in: &cancellables)
+        
         filterButton.publisher(for: .touchUpInside)
             .sink { [weak self] _ in self?.viewModel.send(.toggleFilter) }
             .store(in: &cancellables)
