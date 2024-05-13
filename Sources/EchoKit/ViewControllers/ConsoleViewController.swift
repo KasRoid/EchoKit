@@ -166,7 +166,7 @@ extension ConsoleViewController: ActionProvider {
                             self?.viewModel.send(.filter($0))
                         }
                     } else {
-                        self?.viewModel.send(.filter(.level))
+                        self?.viewModel.send(.filter(.system))
                     }
                 case .clearFilter:
                     self?.showClearFilterAlert()

@@ -7,5 +7,5 @@
 
 enum Filter: String, CaseIterable {
     case custom = "Custom"
-    case level = "Level"
+    case system = "System"
 }

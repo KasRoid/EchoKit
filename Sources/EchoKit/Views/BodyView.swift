@@ -83,7 +83,7 @@ extension BodyView {
                         let filters = Buffer.shared.filterKeys
                         let selected = viewModel.filteredKeys
                         setupCustomFilterDataSource(filters: filters, selected: selected)
-                    case .level:
+                    case .system:
                         let filters = Level.allCases
                         let selected = viewModel.filteredLevels
                         setupLevelFilterDataSource(filters: filters, selected: selected)
