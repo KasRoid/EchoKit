@@ -59,6 +59,7 @@ extension ConsoleViewController {
     }
     
     private func showClearFilterAlert() {
+        guard !(presentedViewController is UIAlertController) else { return }
         isPresenting = true
         showAlert(title: "Clear Filters",
                   message: "Are you sure you want to clear all filters?",

@@ -55,7 +55,6 @@ extension HeaderView {
             .store(in: &cancellables)
         
         filterButton.gesturePublisher(.longPress)
-            .throttle(for: 0.5, scheduler: DispatchQueue.main, latest: false)
             .sink { [weak self] _ in self?.viewModel.send(.clearFilter) }
             .store(in: &cancellables)
         
