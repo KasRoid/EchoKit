@@ -78,7 +78,7 @@ extension ConsoleViewController {
     private func bind() {
         $isPresenting
             .sink { [weak self] in
-                let constant = $0 ? UIView.screenHeight : UIView.screenHeight
+                let constant = $0 ? UIView.screenHeight : 0
                 self?.interactiveViewHeightAnchor.constant = constant
             }
             .store(in: &cancellables)
