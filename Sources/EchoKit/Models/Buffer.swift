@@ -12,7 +12,7 @@ internal final class Buffer {
     static let shared = Buffer()
     
     @Published private(set) var logs: [Log] = []
-    private(set) var filterKeys: [String] = []
+    @Published private(set) var filterKeys: [String] = []
 }
 
 // MARK: - Methods

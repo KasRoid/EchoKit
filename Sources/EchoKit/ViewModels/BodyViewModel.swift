@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Foundation
 
 internal final class BodyViewModel {
     
@@ -13,7 +14,7 @@ internal final class BodyViewModel {
     @Published private(set) var selectedLog: Log?
     @Published private(set) var filter: Filter?
     private(set) var filteredLevels: [Level] = Level.allCases
-    private(set) var filteredKeys: [String] = Buffer.shared.filterKeys
+    private(set) var filteredKeys: [String] = []
     
     private let _result = PassthroughSubject<Result, Never>()
     internal var result: AnyPublisher<Result, Never> { _result.eraseToAnyPublisher() }
@@ -37,10 +38,16 @@ extension BodyViewModel {
     
     private func bind() {
         Buffer.shared.$logs
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 guard let self else { return }
                 logs = $0.filter { self.filteredLevels.contains($0.level) }
             }
+            .store(in: &cancellables)
+        
+        Buffer.shared.$filterKeys
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.filteredKeys = $0 }
             .store(in: &cancellables)
     }
 }
