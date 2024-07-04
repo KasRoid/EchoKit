@@ -10,14 +10,15 @@ import UIKit
 
 internal final class ConsoleViewModel: Echoable {
     
-    @Published private(set) var windowState: WindowState = .windowed
+    @Published private(set) var windowState: WindowState
     
     internal let headerViewModel = HeaderViewModel(.production)
     internal let bodyViewModel = BodyViewModel(.production)
     internal let footerViewModel = FooterViewModel()
     private var cancellables = Set<AnyCancellable>()
     
-    internal init() {
+    internal init(windowState: WindowState) {
+        self.windowState = windowState
         bind()
     }
 }
@@ -82,16 +83,5 @@ extension ConsoleViewModel {
         case .zoom:
             windowState = windowState == .windowed ? .fullscreen : .windowed
         }
-    }
-}
-
-// MARK: - Enums
-extension ConsoleViewModel {
-    
-    internal enum WindowState {
-        case fullscreen
-        case minimized
-        case windowed
-        case closed
     }
 }

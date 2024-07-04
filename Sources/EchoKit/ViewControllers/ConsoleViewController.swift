@@ -17,6 +17,7 @@ internal final class ConsoleViewController: UIViewController, Echoable {
     @Published private var isPresenting = false
     
     private let viewModel: ConsoleViewModel
+    private var headerCancelable: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
     
     private lazy var interactiveViewTopAnchor = interactiveView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
@@ -41,6 +42,10 @@ internal final class ConsoleViewController: UIViewController, Echoable {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         bind()
     }
 }
@@ -76,6 +81,8 @@ extension ConsoleViewController {
 extension ConsoleViewController {
     
     private func bind() {
+        cancellables.removeAll()
+        
         $isPresenting
             .sink { [weak self] in
                 let constant = $0 ? UIView.screenHeight : 0
@@ -84,7 +91,6 @@ extension ConsoleViewController {
             .store(in: &cancellables)
         
         viewModel.$windowState
-            .dropFirst()
             .sink { [weak self] state in
                 UIView.animate(withDuration: 0.1) {
                     switch state {
@@ -154,7 +160,7 @@ extension ConsoleViewController: ActionProvider {
     private func setupHeaderView() {
         let headerViewModel = viewModel.headerViewModel
         consoleView.setupHeaderView(viewModel: headerViewModel)
-        headerViewModel.result
+        headerCancelable = headerViewModel.result
             .sink { [weak self] in
                 switch $0 {
                 case .actions(let actions, let handler):
@@ -177,7 +183,6 @@ extension ConsoleViewController: ActionProvider {
                     self?.showClearFilterAlert()
                 }
             }
-            .store(in: &cancellables)
     }
     
     private func setupBodyView() {

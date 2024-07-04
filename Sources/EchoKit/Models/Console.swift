@@ -20,8 +20,8 @@ public final class Console {
 // MARK: - Public Methods
 extension Console {
     
-    public static func start() {
-        setupConsole()
+    public static func start(windowState: WindowState = .closed) {
+        setupConsole(windowState: windowState)
     }
     
     public static func register(_ logger: any EchoLevel.Type) {
@@ -66,10 +66,10 @@ extension Console {
 // MARK: - Private Functions
 extension Console {
 
-    private static func setupConsole() {
+    private static func setupConsole(windowState: WindowState) {
         let scenes = UIApplication.shared.connectedScenes
         guard let windowScene = scenes.first as? UIWindowScene else { return }
-        let viewModel = ConsoleViewModel()
+        let viewModel = ConsoleViewModel(windowState: windowState)
         let window = ConsoleWindow(windowScene: windowScene, viewModel: viewModel)
         window.frame = UIScreen.main.bounds
         window.windowLevel = .alert + 1
