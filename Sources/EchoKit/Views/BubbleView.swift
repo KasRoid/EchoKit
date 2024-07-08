@@ -61,9 +61,11 @@ extension BubbleView {
             centerXConstraint?.priority = UILayoutPriority(1)
             centerYConstraint?.priority = UILayoutPriority(1)
         case .changed:
-            guard let originalCenter else { return }
+            guard let originalCenter, let safeLayoutGuide = parentView?.safeAreaLayoutGuide else { return }
             let translation = gesture.translation(in: parentView)
-            center = CGPoint(x: originalCenter.x + translation.x, y: originalCenter.y + translation.y)
+            let center = CGPoint(x: originalCenter.x + translation.x, y: originalCenter.y + translation.y)
+            guard safeLayoutGuide.layoutFrame.contains(center) else { return }
+            self.center = center
             updatePosition()
         case .ended, .cancelled:
             updatePosition()
