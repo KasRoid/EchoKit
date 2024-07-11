@@ -45,15 +45,18 @@ extension FooterView {
     private func bind() {
         viewModel.cpuUsage
             .map { String(format: "CPU: %1.0f", $0) + "%," }
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.cpuLabel.text = $0 }
             .store(in: &cancellables)
         
         viewModel.memoryUsage
             .map { String(format: "Mem: %.2fGB / %.2fGB", $0.used, $0.total) }
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.memoryLabel.text = $0 }
             .store(in: &cancellables)
         
         viewModel.logCount
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.logCountLabel.text = "\($0)L" }
             .store(in: &cancellables)
     }

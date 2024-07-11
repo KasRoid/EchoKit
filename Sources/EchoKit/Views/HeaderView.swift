@@ -67,10 +67,12 @@ extension HeaderView {
             .store(in: &cancellables)
         
         viewModel.$isFilterEnabled
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.filterButton.isEnabled = $0 }
             .store(in: &cancellables)
         
         viewModel.$isFilterHighlighted
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.filterButton.tintColor = $0 ? .systemBlue : .white }
             .store(in: &cancellables)
     }
