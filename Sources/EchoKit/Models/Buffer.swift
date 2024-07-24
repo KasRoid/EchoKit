@@ -13,6 +13,7 @@ internal final class Buffer {
     
     @Published private(set) var logs: [Log] = []
     @Published private(set) var filterKeys: [String] = []
+    private let maxLogs = 5000
 }
 
 // MARK: - Methods
@@ -39,6 +40,9 @@ extension Buffer {
     internal func send(_ action: Action) {
         switch action {
         case .append(let log):
+            if logs.count >= maxLogs {
+                logs.removeFirst()
+            }
             logs.append(log)
         case .setFilterKeys(let filterKeys):
             self.filterKeys = filterKeys
