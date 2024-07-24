@@ -37,12 +37,12 @@ extension Console {
     }
     
     public static func echo(_ text: String, level: Level = .info, file: String = #file, function: String = #function, line: Int = #line) {
-        let log = Log(text: text, level: level, file: file, function: function, line: line)
+        let log = Log(text: text.unprettyJSON, level: level, file: file, function: function, line: line)
         buffer.send(.append(log: log))
     }
     
     public static func echo(_ text: String, level: some EchoLevel, file: String = #file, function: String = #function, line: Int = #line) {
-        let log = Log(text: text, level: level, file: file, function: function, line: line)
+        let log = Log(text: text.unprettyJSON, level: level, file: file, function: function, line: line)
         buffer.send(.append(log: log))
     }
     

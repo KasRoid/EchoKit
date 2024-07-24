@@ -18,6 +18,12 @@ internal struct Log: Hashable, Identifiable {
     internal let function: String
     internal let line: Int
     
+    private let prettyText: String?
+    
+    internal var alignedText: String {
+        prettyText ?? text
+    }
+    
     internal init(text: String, level: some EchoLevel, file: String = #file, function: String = #function, line: Int = #line) {
         self.id = UUID()
         self.date = Date()
@@ -27,5 +33,6 @@ internal struct Log: Hashable, Identifiable {
         self.file = file
         self.function = function
         self.line = line
+        self.prettyText = text.prettyJSON
     }
 }

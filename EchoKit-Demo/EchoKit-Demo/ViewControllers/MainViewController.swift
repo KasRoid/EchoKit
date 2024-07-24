@@ -14,12 +14,14 @@ final class MainViewController: UIViewController, Echoable, AlertProvider {
     @IBOutlet private weak var tableView: UITableView!
     
     private var dataSource: MainDataSource?
-    private var viewModel = MainViewModel()
+    private var viewModel: MainViewModel?
     private var cancellables = Set<AnyCancellable>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         Console.echo("Welcome to EchoKit Demo!", level: .notice)
+        let repository = MainRepositoryModel()
+        viewModel = MainViewModel(repository: repository)
         measure()
         bind()
     }
@@ -33,7 +35,7 @@ extension MainViewController {
             .sink { [weak self] in self?.handleDataSourceResult($0) }
             .store(in: &cancellables)
         
-        viewModel.$isMeasuring
+        viewModel?.$isMeasuring
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.dataSource?.updateMeasureState(isMeasuring: $0) }
             .store(in: &cancellables)
@@ -57,8 +59,8 @@ extension MainViewController {
     
     private func handleDataSourceResult(_ tutorial: Tutorial) {
         switch tutorial {
-        case .about, .level, .measure:
-            viewModel.send(.tutorial(tutorial))
+        case .about, .level, .measure, .api:
+            viewModel?.send(.tutorial(tutorial))
         case .input:
             showInputAlert(title: "Input", message: "Type any text") { text in
                 guard let text else { return }

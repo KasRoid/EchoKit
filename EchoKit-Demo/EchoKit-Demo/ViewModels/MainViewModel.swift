@@ -7,11 +7,18 @@
 
 import Combine
 import EchoKit
+import Foundation
 
 final class MainViewModel {
     
     @Published private(set) var isMeasuring = false
     private var finishMeasure: (() -> Void)?
+    private var repository: MainRepository
+    private var cancellables = Set<AnyCancellable>()
+    
+    init(repository: MainRepository) {
+        self.repository = repository
+    }
 }
 
 // MARK: - Actions
@@ -53,6 +60,8 @@ extension MainViewModel {
             Console.echo("==========", level: .info)
         case .measure:
             measure()
+        case .api:
+            fetch()
         }
     }
     
@@ -67,5 +76,16 @@ extension MainViewModel {
             }
         }
         isMeasuring.toggle()
+    }
+    
+    private func fetch() {
+        repository.todos
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: {
+                guard case .failure(let error) = $0 else { return }
+                Console.echo("\(error)", level: .error)
+            },
+                  receiveValue: { Console.echo($0 ?? "No data", level: .info) })
+            .store(in: &cancellables)
     }
 }

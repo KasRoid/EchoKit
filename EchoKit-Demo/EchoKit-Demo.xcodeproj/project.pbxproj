@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		802EA7E72BD22D1200725457 /* EchoKit in Frameworks */ = {isa = PBXBuildFile; productRef = 802EA7E62BD22D1200725457 /* EchoKit */; };
+		804217972C5083860076BA1F /* MainRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 804217962C5083860076BA1F /* MainRepository.swift */; };
+		804217992C5085960076BA1F /* DecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 804217982C5085960076BA1F /* DecodableModel.swift */; };
 		8081136A2BE4907D008C9367 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808113692BE4907D008C9367 /* Logger.swift */; };
 		8081136D2BE4966A008C9367 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8081136C2BE4966A008C9367 /* MainViewModel.swift */; };
 		808113702BE4975C008C9367 /* MainDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8081136F2BE4975C008C9367 /* MainDataSource.swift */; };
@@ -22,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		804217962C5083860076BA1F /* MainRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRepository.swift; sourceTree = "<group>"; };
+		804217982C5085960076BA1F /* DecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodableModel.swift; sourceTree = "<group>"; };
 		8064656B2BD2070F00B819F9 /* EchoKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = EchoKit; path = ..; sourceTree = "<group>"; };
 		808113692BE4907D008C9367 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		8081136C2BE4966A008C9367 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
@@ -57,9 +61,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		804217952C5083490076BA1F /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				804217962C5083860076BA1F /* MainRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
 		808113682BE49069008C9367 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				804217982C5085960076BA1F /* DecodableModel.swift */,
 				808113692BE4907D008C9367 /* Logger.swift */,
 				808113712BE4AF1E008C9367 /* Tutorial.swift */,
 			);
@@ -118,6 +131,7 @@
 				80F9F57D2BD2863400DA42FB /* Delegates */,
 				80F9F5792BD285FF00DA42FB /* ViewControllers */,
 				8081136B2BE4965E008C9367 /* ViewModels */,
+				804217952C5083490076BA1F /* Repositories */,
 				8086392D2BEA14E700AED2AD /* Protocols */,
 				80C0768F2BD1FF37007BB403 /* Info.plist */,
 			);
@@ -237,7 +251,9 @@
 				80C076862BD1FF35007BB403 /* MainViewController.swift in Sources */,
 				8081136A2BE4907D008C9367 /* Logger.swift in Sources */,
 				80C076822BD1FF35007BB403 /* AppDelegate.swift in Sources */,
+				804217992C5085960076BA1F /* DecodableModel.swift in Sources */,
 				80C076842BD1FF35007BB403 /* SceneDelegate.swift in Sources */,
+				804217972C5083860076BA1F /* MainRepository.swift in Sources */,
 				808113702BE4975C008C9367 /* MainDataSource.swift in Sources */,
 				8086392F2BEA163A00AED2AD /* AlertProvider.swift in Sources */,
 			);

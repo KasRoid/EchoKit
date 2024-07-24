@@ -12,4 +12,5 @@ enum Tutorial: String, CaseIterable {
     case level = "Show levels"
     case input = "Input"
     case measure = "Measure"
+    case api = "JSON Response"
 }

@@ -41,15 +41,29 @@ internal final class DetailDataSource: UITableViewDiffableDataSource<Section, An
     }
     
     internal func update(log: Log) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, AnyHashable>()
-        snapshot.appendSections([.metadata, .content])
-        let datum = MetadataType.allCases.compactMap { type -> Metadata? in
-            guard let content = getContent(of: type, from: log) else { return nil }
-            return Metadata(type: type, content: content)
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self else { return }
+            let alignedText = [log.alignedText]
+            var snapshot = NSDiffableDataSourceSnapshot<Section, AnyHashable>()
+            snapshot.appendSections([.metadata, .content])
+            let datum = MetadataType.allCases.compactMap { type -> Metadata? in
+                guard let content = self.getContent(of: type, from: log) else { return nil }
+                return Metadata(type: type, content: content)
+            }
+            let loading = ["Loading..."]
+            snapshot.appendItems(loading, toSection: .content)
+            snapshot.appendItems(datum, toSection: .metadata)
+            
+            DispatchQueue.main.async {
+                self.apply(snapshot, animatingDifferences: false)
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.005) {
+                    snapshot.deleteItems(loading)
+                    snapshot.appendItems(alignedText, toSection: .content)
+                    self.apply(snapshot, animatingDifferences: false)
+                }
+            }
         }
-        snapshot.appendItems(datum, toSection: .metadata)
-        snapshot.appendItems([log.text], toSection: .content)
-        apply(snapshot, animatingDifferences: false)
     }
 }
 
