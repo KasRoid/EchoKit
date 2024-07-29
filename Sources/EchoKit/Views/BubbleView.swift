@@ -89,6 +89,9 @@ extension BubbleView {
         centerYConstraint?.isActive = true
         widthAnchor.constraint(equalToConstant: 30).isActive = true
         heightAnchor.constraint(equalToConstant: 30).isActive = true
+        guard #unavailable(iOS 17.0) else { return }
+        let image = UIImage(systemName: "terminal.fill")
+        button.setImage(image, for: .normal)
     }
     
     private func updatePosition() {
