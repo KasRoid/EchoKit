@@ -51,6 +51,13 @@ Then, run the command:
 
 `pod install`
 
+## Features
+
+- Easy Integration: Integrates seamlessly with minimal code changes.
+- Customizable Logging Levels: Supports various logging levels to fine-tune log output.
+- Rich Log Formatting: Offers customizable log formats with timestamps, logging levels, and contextual information.
+- Automatic JSON Formatting: Detects and prettifies JSON data in logs for enhanced readability.
+
 ## Levels
 
 EchoKit offers eight logging levels for monitoring and debugging:
