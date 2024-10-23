@@ -10,8 +10,8 @@ import UIKit
 
 internal final class BodyView: UIView {
     
-    @IBOutlet private weak var consoleTableView: UITableView!
-    @IBOutlet private weak var auxiliaryTableView: UITableView!
+    @IBOutlet private weak var consoleTableView: ConsoleTableView!
+    @IBOutlet private weak var auxiliaryTableView: AuxiliaryTableView!
     
     private var viewModel: BodyViewModel!
     private var consoleDataSource: ConsoleDataSource?
@@ -20,7 +20,6 @@ internal final class BodyView: UIView {
     private var customFilterDataSource: FilterDataSource<String>?
     private var consoleCancellables = Set<AnyCancellable>()
     private var auxiliaryCancellables = Set<AnyCancellable>()
-    private var auxiliaryTableViewTapGesture: UITapGestureRecognizer?
     
     internal init(viewModel: BodyViewModel) {
         self.viewModel = viewModel
@@ -55,7 +54,7 @@ extension BodyView {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 self?.consoleDataSource?.update(logs: $0)
-                guard self?.consoleDataSource?.isLatestData == true else { return }
+                guard self?.consoleTableView.isLatestData == true else { return }
                 self?.scrollTo(log: $0.last)
             }
             .store(in: &consoleCancellables)
@@ -67,7 +66,6 @@ extension BodyView {
                     self?.setupDetailDataSource(with: log)
                 } else {
                     self?.detailDataSource = nil
-                    self?.resetAuxiliaryTableView()
                 }
             }
             .store(in: &consoleCancellables)
@@ -93,16 +91,15 @@ extension BodyView {
                     levelFilterDataSource = nil
                     customFilterDataSource?.finish()
                     customFilterDataSource = nil
-                    resetAuxiliaryTableView()
                 }
             }
             .store(in: &consoleCancellables)
         
-        consoleDataSource?.tap
+        consoleTableView.tap
             .sink { [weak self] in self?.viewModel.send(.showDetail($0)) }
             .store(in: &consoleCancellables)
         
-        consoleDataSource?.interaction
+        consoleTableView.interaction
             .sink { [weak self] log, interaction in
                 switch interaction {
                 case .copy:
@@ -131,23 +128,17 @@ extension BodyView {
         detailDataSource = .init(tableView: auxiliaryTableView)
         detailDataSource?.update(log: log)
         
-        detailDataSource?.tap
+        auxiliaryTableView.tap
             .sink { [weak self] in self?.viewModel.send(.quit) }
             .store(in: &auxiliaryCancellables)
         
-        detailDataSource?.interaction
+        auxiliaryTableView.interaction
             .sink { [weak self] text, interaction in
                 switch interaction {
                 case .copy:
                     self?.viewModel.send(.copyText(text: text))
                 }
             }
-            .store(in: &auxiliaryCancellables)
-        
-        let gesture = UITapGestureRecognizer()
-        auxiliaryTableViewTapGesture = gesture
-        auxiliaryTableView.gesturePublisher(.custom(gesture))
-            .sink { [weak self] _ in self?.viewModel.send(.quit) }
             .store(in: &auxiliaryCancellables)
     }
     
@@ -167,12 +158,5 @@ extension BodyView {
         customFilterDataSource?.result
             .sink { [weak self] in self?.viewModel.send(.setCustomFilter($0)) }
             .store(in: &auxiliaryCancellables)
-    }
-    
-    private func resetAuxiliaryTableView() {
-        if let auxiliaryTableViewTapGesture {
-            auxiliaryTableView.removeGestureRecognizer(auxiliaryTableViewTapGesture)
-        }
-        auxiliaryCancellables.removeAll()
     }
 }

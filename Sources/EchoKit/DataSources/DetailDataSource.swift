@@ -5,7 +5,6 @@
 //  Created by Lukas on 4/24/24.
 //
 
-import Combine
 import UIKit
 
 internal final class DetailDataSource: UITableViewDiffableDataSource<Section, AnyHashable> {
@@ -13,31 +12,37 @@ internal final class DetailDataSource: UITableViewDiffableDataSource<Section, An
     internal typealias ConsoleCell = ConsoleTextTableViewCell
     internal typealias DetailCell = DetailTableViewCell
     
-    private weak var tableView: UITableView?
-    private let _tap = PassthroughSubject<Void, Never>()
-    private let _interaction = PassthroughSubject<(text: String, interaction: Interaction), Never>()
-    
-    internal var tap: AnyPublisher<Void, Never> { _tap.eraseToAnyPublisher() }
-    internal var interaction: AnyPublisher<(text: String, interaction: Interaction), Never> { _interaction.eraseToAnyPublisher() }
-    
     internal init(tableView: UITableView) {
-        self.tableView = tableView
         super.init(tableView: tableView) { tableView, indexPath, item in
             if let item = item as? Metadata {
                 let cell = tableView.dequeueReusableCell(withIdentifier: ConsoleCell.identifier, for: indexPath) as? ConsoleCell
                 cell?.prepare(metadata: item)
+                for interaction in (cell?.interactions ?? []) where interaction is UIContextMenuInteraction {
+                    cell?.removeInteraction(interaction)
+                }
+                if let tableView = tableView as? AuxiliaryTableView {
+                    let interaction = UIContextMenuInteraction(delegate: tableView)
+                    cell?.addInteraction(interaction)
+                }
                 return cell
             }
+            
             if let item = item as? String {
                 let cell = tableView.dequeueReusableCell(withIdentifier: DetailCell.identifier, for: indexPath) as? DetailCell
                 cell?.prepare(text: item)
+                for interaction in (cell?.interactions ?? []) where interaction is UIContextMenuInteraction {
+                    cell?.removeInteraction(interaction)
+                }
+                if let tableView = tableView as? AuxiliaryTableView {
+                    let interaction = UIContextMenuInteraction(delegate: tableView)
+                    cell?.addInteraction(interaction)
+                }
                 return cell
             }
             return UITableViewCell()
         }
         tableView.register(ConsoleCell.identifier.nib, forCellReuseIdentifier: ConsoleCell.identifier)
         tableView.register(DetailCell.identifier.nib, forCellReuseIdentifier: DetailCell.identifier)
-        tableView.delegate = self
     }
     
     internal func update(log: Log) {
@@ -64,52 +69,6 @@ internal final class DetailDataSource: UITableViewDiffableDataSource<Section, An
                 }
             }
         }
-    }
-}
-
-// MARK: - UITableViewDelegate
-extension DetailDataSource: UITableViewDelegate {
-    
-    internal func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        _tap.send()
-    }
-    
-    internal func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        for interaction in cell.interactions where interaction is UIContextMenuInteraction {
-            cell.removeInteraction(interaction)
-        }
-        let interaction = UIContextMenuInteraction(delegate: self)
-        cell.addInteraction(interaction)
-    }
-    
-    internal func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 8
-    }
-    
-    internal func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let footerView = UIView()
-        footerView.backgroundColor = .clear
-        return footerView
-    }
-}
-
-// MARK: - UIContextMenuInteractionDelegate
-extension DetailDataSource: UIContextMenuInteractionDelegate {
-    
-    internal func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
-        guard let convertedLocation = tableView?.convert(location, from: interaction.view),
-              let indexPath = tableView?.indexPathForRow(at: convertedLocation),
-              let text = itemIdentifier(for: indexPath) as? String else { return nil }
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-            let children = Interaction.allCases.map { interaction in UIAction(title: interaction.rawValue) { [weak self] _ in
-                self?._interaction.send((text, interaction))
-            }}
-            return UIMenu(title: "", children: children)
-        }
-    }
-    
-    internal enum Interaction: String, CaseIterable {
-        case copy = "Copy"
     }
 }
 
