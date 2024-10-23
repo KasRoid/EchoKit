@@ -51,12 +51,9 @@ extension BodyView {
     private func bind() {
         viewModel.$logs
             .throttle(for: 0.1, scheduler: DispatchQueue.main, latest: true)
+            .map { $0.reversed() }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                self?.consoleDataSource?.update(logs: $0)
-                guard self?.consoleTableView.isLatestData == true else { return }
-                self?.scrollTo(log: $0.last)
-            }
+            .sink { [weak self] in self?.consoleDataSource?.update(logs: $0) }
             .store(in: &consoleCancellables)
         
         viewModel.$selectedLog
@@ -118,12 +115,7 @@ extension BodyView {
         auxiliaryTableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 0)
         consoleDataSource = .init(tableView: consoleTableView)
     }
-    
-    private func scrollTo(log: Log?) {
-        guard let log, let indexPath = consoleDataSource?.indexPath(for: log) else { return }
-        consoleTableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
-    }
-    
+
     private func setupDetailDataSource(with log: Log) {
         detailDataSource = .init(tableView: auxiliaryTableView)
         detailDataSource?.update(log: log)
