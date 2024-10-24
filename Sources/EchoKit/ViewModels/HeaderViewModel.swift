@@ -42,6 +42,7 @@ extension HeaderViewModel {
         case enableFilter(isEnabled: Bool)
         case highlightFilter(isHighlighted: Bool)
         case clearFilter
+        case scrollToTop
     }
     
     internal func send(_ action: Action) {
@@ -64,6 +65,8 @@ extension HeaderViewModel {
         case .clearFilter:
             guard isFilterHighlighted else { return }
             _result.send(.clearFilter)
+        case .scrollToTop:
+            _result.send(.scrollToTop)
         }
     }
 }
@@ -78,6 +81,7 @@ extension HeaderViewModel {
         case quit
         case filter(showOption: Bool)
         case clearFilter
+        case scrollToTop
     }
     
     private func handleAction(_ action: MoreAction) {

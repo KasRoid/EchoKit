@@ -49,6 +49,10 @@ extension BodyView {
 extension BodyView {
     
     private func bind() {
+        viewModel.onScrollToTop
+            .sink { [weak self] in self?.consoleTableView.setContentOffset(.zero, animated: true) }
+            .store(in: &consoleCancellables)
+        
         viewModel.$logs
             .throttle(for: 0.1, scheduler: DispatchQueue.main, latest: true)
             .map { $0.reversed() }

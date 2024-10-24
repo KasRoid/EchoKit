@@ -181,6 +181,8 @@ extension ConsoleViewController: ActionProvider {
                     }
                 case .clearFilter:
                     self?.showClearFilterAlert()
+                case .scrollToTop:
+                    self?.viewModel.send(.scrollToTop)
                 }
             }
     }

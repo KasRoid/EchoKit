@@ -11,6 +11,8 @@ import UIKit
 internal final class HeaderView: UIView {
     
     @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var leftSpaceView: UIView!
+    @IBOutlet private weak var rightSpaceView: UIView!
     @IBOutlet private weak var windowControls: WindowControls!
     @IBOutlet private weak var filterButton: UIButton!
     @IBOutlet private weak var actionButton: UIButton!
@@ -52,6 +54,14 @@ extension HeaderView {
         
         titleLabel.gesturePublisher(.tap)
             .sink { [weak self] _ in self?.viewModel.send(.toggleWindowPosition) }
+            .store(in: &cancellables)
+        
+        leftSpaceView.gesturePublisher(.tap)
+            .sink { [weak self] _ in self?.viewModel.send(.scrollToTop) }
+            .store(in: &cancellables)
+        
+        rightSpaceView.gesturePublisher(.tap)
+            .sink { [weak self] _ in self?.viewModel.send(.scrollToTop) }
             .store(in: &cancellables)
         
         filterButton.publisher(for: .touchUpInside)

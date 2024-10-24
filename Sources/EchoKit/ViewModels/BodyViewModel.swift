@@ -9,13 +9,14 @@ import Combine
 import Foundation
 
 internal final class BodyViewModel {
-    
+
+    let onScrollToTop = PassthroughSubject<Void, Never>()
     @Published private(set) var logs: [Log] = []
     @Published private(set) var selectedLog: Log?
     @Published private(set) var filter: Filter?
     private(set) var filteredLevels: [Level] = Level.allCases
     private(set) var filteredKeys: [String] = []
-    
+
     private let _result = PassthroughSubject<Result, Never>()
     internal var result: AnyPublisher<Result, Never> { _result.eraseToAnyPublisher() }
 
@@ -64,6 +65,7 @@ extension BodyViewModel {
         case setLevelFilter([Level])
         case setCustomFilter([String])
         case clearFilters
+        case scrollToTop
     }
     
     internal func send(_ action: Action) {
@@ -95,6 +97,8 @@ extension BodyViewModel {
             filteredLevels = Level.allCases
             filteredKeys = Buffer.shared.filterKeys
             applyFilters()
+        case .scrollToTop:
+            onScrollToTop.send()
         }
     }
     
