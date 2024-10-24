@@ -32,6 +32,7 @@ extension ConsoleViewModel {
         case quit
         case filter(Filter)
         case clearFilters
+        case scrollToTop
     }
     
     internal func send(_ action: Action) {
@@ -46,6 +47,8 @@ extension ConsoleViewModel {
             bodyViewModel.send(.toggleFilter(filter))
         case .clearFilters:
             bodyViewModel.send(.clearFilters)
+        case .scrollToTop:
+            bodyViewModel.send(.scrollToTop)
         }
     }
 }
