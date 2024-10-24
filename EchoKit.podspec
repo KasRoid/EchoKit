@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "EchoKit"
-  s.version      = "1.0.8"
+  s.version      = "1.0.9"
   s.summary      = "A simple and customizable logging solution for iOS apps."
 
   s.description  = <<-DESC
