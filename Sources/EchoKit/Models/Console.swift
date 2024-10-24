@@ -26,22 +26,24 @@ extension Console {
     
     public static func register(_ logger: any EchoLevel.Type) {
         var filterKeys = logger.allCases
-            	.compactMap { $0 as? any EchoLevel }
-                .compactMap(\.filterKey)
-                .reduce(into: Set<String>()) { $0.insert($1) }
-                .filter { !$0.isEmpty }
-                .sorted()
+            .compactMap { $0 as? any EchoLevel }
+            .compactMap(\.filterKey)
+            .reduce(into: Set<String>()) { $0.insert($1) }
+            .filter { !$0.isEmpty }
+            .sorted()
         
         filterKeys.insert("default", at: 0)
         buffer.send(.setFilterKeys(filterKeys))
     }
     
-    public static func echo(_ text: String, level: Level = .info, file: String = #file, function: String = #function, line: Int = #line) {
+    public static func echo(_ message: Any, level: Level = .info, file: String = #file, function: String = #function, line: Int = #line) {
+        let text = String(describing: message)
         let log = Log(text: text.unprettyJSON, level: level, file: file, function: function, line: line)
         buffer.send(.append(log: log))
     }
     
-    public static func echo(_ text: String, level: some EchoLevel, file: String = #file, function: String = #function, line: Int = #line) {
+    public static func echo(_ message: Any, level: some EchoLevel, file: String = #file, function: String = #function, line: Int = #line) {
+        let text = String(describing: message)
         let log = Log(text: text.unprettyJSON, level: level, file: file, function: function, line: line)
         buffer.send(.append(log: log))
     }
@@ -65,7 +67,7 @@ extension Console {
 
 // MARK: - Private Functions
 extension Console {
-
+    
     private static func setupConsole(windowState: WindowState) {
         let scenes = UIApplication.shared.connectedScenes
         guard let windowScene = scenes.first as? UIWindowScene else { return }
