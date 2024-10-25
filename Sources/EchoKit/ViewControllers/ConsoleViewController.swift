@@ -109,6 +109,10 @@ extension ConsoleViewController {
             }
             .store(in: &cancellables)
         
+        viewModel.$isCaptured
+            .sink { [weak self] in self?.isPresenting = $0 }
+            .store(in: &cancellables)
+        
         bubbleView.tap
             .sink { [weak self] in self?.viewModel.send(.activateWindow) }
             .store(in: &cancellables)

@@ -28,9 +28,9 @@ internal final class ConsoleWindow: UIWindow {
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         if viewModel.windowState == .closed {
-            return bubbleView.frame.contains(point) ? super.hitTest(point, with: event) : nil
+            bubbleView.frame.contains(point) ? super.hitTest(point, with: event) : nil
         } else {
-            return interactiveView.frame.contains(point) ? super.hitTest(point, with: event) : nil
+            interactiveView.frame.contains(point) ? super.hitTest(point, with: event) : nil
         }
     }
 }

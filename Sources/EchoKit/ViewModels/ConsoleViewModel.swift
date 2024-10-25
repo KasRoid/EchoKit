@@ -11,6 +11,7 @@ import UIKit
 internal final class ConsoleViewModel: Echoable {
     
     @Published private(set) var windowState: WindowState
+    @Published private(set) var isCaptured = false
     
     internal let headerViewModel = HeaderViewModel(.production)
     internal let bodyViewModel = BodyViewModel(.production)
@@ -66,6 +67,8 @@ extension ConsoleViewModel {
                     self?.headerViewModel.send(.changeActions(isQuitable: isQuitable))
                 case .isFiltered(let isFiltered):
                     self?.headerViewModel.send(.highlightFilter(isHighlighted: isFiltered))
+                case .contextMenu(let isEnabled):
+                    self?.isCaptured = isEnabled
                 }
             }
             .store(in: &cancellables)

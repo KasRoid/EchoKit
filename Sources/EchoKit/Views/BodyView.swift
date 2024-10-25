@@ -108,6 +108,14 @@ extension BodyView {
                 }
             }
             .store(in: &consoleCancellables)
+        
+        consoleTableView.contextMenu
+            .sink { [weak self] in self?.viewModel.send(.contextMenu($0)) }
+            .store(in: &consoleCancellables)
+        
+        auxiliaryTableView.contextMenu
+            .sink { [weak self] in self?.viewModel.send(.contextMenu($0)) }
+            .store(in: &auxiliaryCancellables)
     }
 }
 

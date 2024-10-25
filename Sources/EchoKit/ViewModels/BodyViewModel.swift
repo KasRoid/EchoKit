@@ -1,6 +1,6 @@
 //
 //  BodyViewModel.swift
-//  
+//
 //
 //  Created by Lukas on 4/19/24.
 //
@@ -9,17 +9,17 @@ import Combine
 import Foundation
 
 internal final class BodyViewModel {
-
+    
     let onScrollToTop = PassthroughSubject<Void, Never>()
     @Published private(set) var logs: [Log] = []
     @Published private(set) var selectedLog: Log?
     @Published private(set) var filter: Filter?
     private(set) var filteredLevels: [Level] = Level.allCases
     private(set) var filteredKeys: [String] = []
-
+    
     private let _result = PassthroughSubject<Result, Never>()
     internal var result: AnyPublisher<Result, Never> { _result.eraseToAnyPublisher() }
-
+    
     private(set) var pasteboard: Pasteboard
     private var cancellables = Set<AnyCancellable>()
     
@@ -66,6 +66,7 @@ extension BodyViewModel {
         case setCustomFilter([String])
         case clearFilters
         case scrollToTop
+        case contextMenu(Bool)
     }
     
     internal func send(_ action: Action) {
@@ -99,6 +100,8 @@ extension BodyViewModel {
             applyFilters()
         case .scrollToTop:
             onScrollToTop.send()
+        case .contextMenu(let isEnabled):
+            _result.send(.contextMenu(isEnabled))
         }
     }
     
@@ -123,5 +126,6 @@ extension BodyViewModel {
         case isQuitable(Bool)
         case isFilterable(Bool)
         case isFiltered(Bool)
+        case contextMenu(Bool)
     }
 }

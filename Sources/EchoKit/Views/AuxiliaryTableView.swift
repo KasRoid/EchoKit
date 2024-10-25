@@ -8,14 +8,15 @@
 import Combine
 import UIKit
 
-internal final class AuxiliaryTableView: UITableView, UIContextMenuInteractionDelegate {
+internal final class AuxiliaryTableView: UITableView {
     
     internal var tap: AnyPublisher<Void, Never> { _tap.eraseToAnyPublisher() }
     internal var interaction: AnyPublisher<(text: String, interaction: Interaction), Never> { _interaction.eraseToAnyPublisher() }
+    internal var contextMenu: AnyPublisher<Bool, Never> { _contextMenu.eraseToAnyPublisher() }
     
     private let _tap = PassthroughSubject<Void, Never>()
     private let _interaction = PassthroughSubject<(text: String, interaction: Interaction), Never>()
-    private(set) var isLatestData = true
+    private let _contextMenu = PassthroughSubject<Bool, Never>()
     
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
@@ -27,12 +28,20 @@ internal final class AuxiliaryTableView: UITableView, UIContextMenuInteractionDe
         delegate = self
     }
     
+    internal enum Interaction: String, CaseIterable {
+        case copy = "Copy"
+    }
+}
+
+// MARK: - UIContextMenuInteractionDelegate
+extension AuxiliaryTableView: UIContextMenuInteractionDelegate {
+    
     internal func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         let convertedLocation = convert(location, from: interaction.view)
         guard let indexPath = indexPathForRow(at: convertedLocation),
               let dataSource = dataSource as? DetailDataSource,
               let text = dataSource.itemIdentifier(for: indexPath) as? String else { return nil }
-        
+        _contextMenu.send(true)
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
             let children = Interaction.allCases.map { interaction in UIAction(title: interaction.rawValue) { [weak self] _ in
                 self?._interaction.send((text, interaction))
@@ -41,8 +50,8 @@ internal final class AuxiliaryTableView: UITableView, UIContextMenuInteractionDe
         }
     }
     
-    internal enum Interaction: String, CaseIterable {
-        case copy = "Copy"
+    internal func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willEndFor configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
+        _contextMenu.send(false)
     }
 }
 
