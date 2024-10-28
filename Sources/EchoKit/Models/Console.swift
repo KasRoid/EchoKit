@@ -48,19 +48,14 @@ extension Console {
         buffer.send(.append(log: log))
     }
     
-    public static func measure(message: String? = nil, file: String = #file, function: String = #function, line: Int = #line, _ operation: @escaping (@escaping () -> Void) -> Void) {
+    public static func measure(task: String? = nil, file: String = #file, function: String = #function, line: Int = #line, _ operation: @escaping (@escaping () -> Void) -> Void) {
         let start = DispatchTime.now()
         operation {
             let end = DispatchTime.now()
             let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
             let timeInterval = Double(nanoTime) / 1_000_000_000
-            let formattedTime = String(format: "%.5f", timeInterval)
-            let text = if let message {
-                "\(message) \(formattedTime) sec, \(function)"
-            } else {
-                "\(formattedTime) sec, \(function)"
-            }
-            echo(text, level: .info, file: file, function: function, line: line)
+            let log = EchoLog.performance(task: task ?? function, duration: timeInterval)
+            echo(log, level: .info, file: file, function: function, line: line)
         }
     }
 }

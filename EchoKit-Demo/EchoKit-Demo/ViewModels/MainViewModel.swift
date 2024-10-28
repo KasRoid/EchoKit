@@ -71,7 +71,7 @@ extension MainViewModel {
             finishMeasure = nil
         } else {
             Console.echo("Measure Started")
-            Console.measure(message: "Measure finished, It took") { [weak self] done in
+            Console.measure(task: "Measure Test") { [weak self] done in
                 self?.finishMeasure = done
             }
         }

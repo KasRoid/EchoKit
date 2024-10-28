@@ -46,7 +46,7 @@ extension MainViewController {
 extension MainViewController {
     
     private func measure() {
-        Console.measure(message: "TableView setup took") { [weak self] done in
+        Console.measure(task: "TableView Setup") { [weak self] done in
             self?.setupUI()
             done()
         }

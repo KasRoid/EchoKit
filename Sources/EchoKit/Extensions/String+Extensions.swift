@@ -26,6 +26,6 @@ internal extension String {
               let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []),
               let prettyData = try? JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted]),
               let string = String(data: prettyData, encoding: .utf8) else { return nil }
-         return string
+        return string
     }
 }
