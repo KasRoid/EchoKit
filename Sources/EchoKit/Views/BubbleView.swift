@@ -68,7 +68,7 @@ extension BubbleView {
             self.center = center
             updatePosition()
         case .ended, .cancelled:
-            updatePosition()
+            updatePosition(isEnd: true)
         default:
             break
         }
@@ -83,8 +83,13 @@ extension BubbleView {
         guard let parentView else { return }
         parentView.addSubview(self)
         translatesAutoresizingMaskIntoConstraints = false
-        centerXConstraint = centerXAnchor.constraint(equalTo: parentView.centerXAnchor)
-        centerYConstraint = centerYAnchor.constraint(equalTo: parentView.centerYAnchor)
+        let location = if let location = UserDefaults.standard.cgPoint(forKey: "location") {
+            location
+        } else {
+            CGPoint(x: 0, y: 0)
+        }
+        centerXConstraint = centerXAnchor.constraint(equalTo: parentView.centerXAnchor, constant: location.x)
+        centerYConstraint = centerYAnchor.constraint(equalTo: parentView.centerYAnchor, constant: location.y)
         centerXConstraint?.isActive = true
         centerYConstraint?.isActive = true
         widthAnchor.constraint(equalToConstant: 30).isActive = true
@@ -94,7 +99,7 @@ extension BubbleView {
         button.setImage(image, for: .normal)
     }
     
-    private func updatePosition() {
+    private func updatePosition(isEnd: Bool = false) {
         guard let parentView else { return }
         centerXConstraint?.isActive = false
         centerYConstraint?.isActive = false
@@ -107,5 +112,8 @@ extension BubbleView {
         centerXConstraint?.isActive = true
         centerYConstraint?.isActive = true
         parentView.layoutIfNeeded()
+        guard isEnd else { return }
+        let point = CGPoint(x: newCenterX, y: newCenterY)
+        UserDefaults.standard.set(point, forKey: "location")
     }
 }
