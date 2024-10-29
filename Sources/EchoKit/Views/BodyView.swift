@@ -50,7 +50,13 @@ extension BodyView {
     
     private func bind() {
         viewModel.onScrollToTop
-            .sink { [weak self] in self?.consoleTableView.setContentOffset(.zero, animated: true) }
+            .sink { [weak self] in
+                if self?.detailDataSource == nil {
+                    self?.consoleTableView.setContentOffset(.zero, animated: true)
+                } else {
+                    self?.auxiliaryTableView.setContentOffset(.zero, animated: true)
+                }
+            }
             .store(in: &consoleCancellables)
         
         viewModel.$logs
@@ -127,7 +133,7 @@ extension BodyView {
         auxiliaryTableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 0)
         consoleDataSource = .init(tableView: consoleTableView)
     }
-
+    
     private func setupDetailDataSource(with log: Log) {
         detailDataSource = .init(tableView: auxiliaryTableView)
         detailDataSource?.update(log: log)
