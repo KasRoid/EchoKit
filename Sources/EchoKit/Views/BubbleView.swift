@@ -18,6 +18,7 @@ internal final class BubbleView: UIView {
     
     private var centerXConstraint: NSLayoutConstraint?
     private var centerYConstraint: NSLayoutConstraint?
+    private let locationKey = "EchoKit-Bubble-Location"
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -83,7 +84,7 @@ extension BubbleView {
         guard let parentView else { return }
         parentView.addSubview(self)
         translatesAutoresizingMaskIntoConstraints = false
-        let location = if let location = UserDefaults.standard.cgPoint(forKey: "location") {
+        let location = if let location = UserDefaults.standard.cgPoint(forKey: locationKey) {
             location
         } else {
             CGPoint(x: 0, y: 0)
@@ -114,6 +115,6 @@ extension BubbleView {
         parentView.layoutIfNeeded()
         guard isEnd else { return }
         let point = CGPoint(x: newCenterX, y: newCenterY)
-        UserDefaults.standard.set(point, forKey: "location")
+        UserDefaults.standard.set(point, forKey: locationKey)
     }
 }
