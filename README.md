@@ -6,17 +6,20 @@ EchoKit makes it easy to monitor and debug your iOS apps with a straightforward 
 
 ## Contents
 
-- [Requirements](#requirements)
-- [Installation](#installation)
+- [EchoKit](#echokit)
+  - [Contents](#contents)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
     - [Swift Package Manager](#swift-package-manager)
     - [CocoaPods](#cocoapods)
-- [Levels](#levels)
-- [Getting Started](#getting-started)
+  - [Features](#features)
+  - [Levels](#levels)
+  - [Getting Started](#getting-started)
     - [Basic Usage](#basic-usage)
     - [Custom Log Levels](#custom-log-levels)
     - [Measuring Execution Time](#measuring-execution-time)
-- [Credits](#credits)
-- [License](#license)
+  - [Credits](#credits)
+  - [License](#license)
 
 ## Requirements
 
@@ -120,6 +123,34 @@ final class EchoViewController: UIViewController, Echoable {
 }
 ```
 
+5. **Structured Log**
+
+EchoLog provides structured log summaries for requests, responses, performance, and errors.
+
+```swift
+EchoLog.urlRequest(request: myRequest, metrics: myMetrics)
+```
+
+```text
+===== Request Summary =====
+URL: https://example.com
+Method: GET
+Date: 2024-10-31 12:34:56
+Request Size: 512 bytes
+Duration: 0.45 seconds
+Query Parameters: None
+
+----- Headers -----
+Authorization: Bearer token
+
+----- Body -----
+{
+    "key": "value"
+}
+============================
+
+```
+
 ---
 
 ### Custom Log Levels
@@ -132,46 +163,29 @@ To integrate your custom log levels with EchoKit, adopt the `EchoLevel` protocol
 
 ```swift
 enum LogLevel: String, EchoLevel {
-    case network     
-    case ga     
-    case verbose     
-    case info     
-    case debug     
-    case warning     
-    case error     
-    case assert     
-    case fatal      
-    
+    case network, ga, verbose, info, debug, warning, error, assert, fatal
+
     public var filterKey: String? {
         rawValue     
     }
     
     public var echoLevel: Level {
         switch self {         
-        case .network:
-            return .trace         
-        case .ga:
-            return .info         
-        case .verbose:
-            return .debug         
-        case .info:
-            return .info         
-        case .debug:
-            return .debug         
-        case .warning:
-            return .warning         
-        case .error:
-            return .error         
-        case .assert:
-            return .critical         
-        case .fatal:
-            return .critical         
+        case .network: .trace         
+        case .ga: .info         
+        case .verbose: .debug         
+        case .info: .info         
+        case .debug: .debug         
+        case .warning: .warning         
+        case .error: .error         
+        case .assert: .critical         
+        case .fatal: .critical         
     }     
 }
 ```
- 
+
 2. **Custom Logger**
-    
+
 Implement a custom logger to route messages through EchoKit. For example, if you are using a logger like the one below:
 
 ```swift
@@ -184,7 +198,7 @@ final class Logger {
     } 
 }
 ```
-    
+
 3. **Register Custom Log Levels**
 
 Register your custom log levels with EchoKit.
@@ -202,7 +216,7 @@ Console.register(LogLevel.self)
 Usage Example:
 
 ```swift
-Console.measure(message: "Expensive operation took") { done in
+Console.measure(task: "Expensive operation") { done in
     // Code to measure
     expensiveOperation()
     done()
@@ -217,6 +231,16 @@ Console.measure { done in
     expensiveOperation()
     done()
 }
+```
+
+Result:
+
+```text
+===== Performance Log =====
+Task: Expensive operation
+Duration: 1.592845 seconds
+============================
+
 ```
 
 ## Credits
