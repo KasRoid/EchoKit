@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Foundation
 
 internal final class Buffer {
     
@@ -14,6 +15,9 @@ internal final class Buffer {
     @Published private(set) var logs: [Log] = []
     @Published private(set) var filterKeys: [String] = []
     private let maxLogs = 5000
+    private let syncQueue = DispatchQueue(label: "Buffer.syncQueue", attributes: .concurrent)
+    
+    private init() {}
 }
 
 // MARK: - Methods
@@ -40,14 +44,20 @@ extension Buffer {
     internal func send(_ action: Action) {
         switch action {
         case .append(let log):
-            if logs.count >= maxLogs {
-                logs.removeFirst()
+            syncQueue.async(flags: .barrier) { [weak self] in
+                guard let self else { return }
+                if logs.count >= maxLogs {
+                    logs.removeFirst()
+                }
+                logs.append(log)
             }
-            logs.append(log)
         case .setFilterKeys(let filterKeys):
             self.filterKeys = filterKeys
         case .clear:
-            logs.removeAll()
+            syncQueue.async(flags: .barrier) { [weak self] in
+                guard let self else { return }
+                logs.removeAll()
+            }
         }
     }
 }
